@@ -3,12 +3,13 @@ import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 
-export const DEFAULT_SETTINGS = Object.freeze({ version: 1, emitSidecarLinks: true });
+export const DEFAULT_SETTINGS = Object.freeze({ version: 1, emitSidecarLinks: true, locale: 'auto' });
+export const ALLOWED_LOCALES = new Set(['auto', 'en', 'zh-CN']);
 export function resolveSettingsFile(deps = {}) {
   return deps.settingsFile || process.env.BEADS_TASKS_SETTINGS_FILE || (deps.extraEnvKeys || []).map((key) => process.env[key]).find(Boolean) || join(homedir(), '.config', 'beads-tasks', 'settings.json');
 }
 export function normalizeSettings(raw) {
-  return { version: 1, emitSidecarLinks: raw?.emitSidecarLinks !== false };
+  return { version: 1, emitSidecarLinks: raw?.emitSidecarLinks !== false, locale: ALLOWED_LOCALES.has(raw?.locale) ? raw.locale : 'auto' };
 }
 export async function loadSettings(deps = {}) {
   try {
@@ -19,7 +20,7 @@ export async function loadSettings(deps = {}) {
   }
 }
 export async function saveSettings(patch, deps = {}) {
-  if (!patch || typeof patch !== 'object' || Array.isArray(patch) || ('emitSidecarLinks' in patch && typeof patch.emitSidecarLinks !== 'boolean')) {
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch) || ('emitSidecarLinks' in patch && typeof patch.emitSidecarLinks !== 'boolean') || ('locale' in patch && !ALLOWED_LOCALES.has(patch.locale))) {
     throw Object.assign(new Error('invalid settings'), { code: 'EINVALID' });
   }
   const path = resolveSettingsFile(deps);

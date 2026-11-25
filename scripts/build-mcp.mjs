@@ -39,6 +39,7 @@ const scripts = [
   `window.__tasksUiConfig = ${JSON.stringify(uiConfig).replace(/</g, '\\u003c')};`,
   ...await Promise.all(extraScripts.map(file => readFile(resolve(root, file), 'utf8'))),
   bridge.outputFiles[0].text,
+  await moduleWrapper('i18n.mjs', '__tasksI18n = { SUPPORTED_LOCALES, normalizeLocale, resolveLocale, MESSAGES, createTranslator }'),
   await moduleWrapper('notes_format.mjs', '__tasksNotesFormat = { formatBeadNotesForDisplay }'),
   await moduleWrapper('in_page_search.mjs', '__tasksInPageSearch = { MAX_FIND_MARKS, normalizeFindQuery, findTextRanges, splitTextByMatches, nextMatchIndex, shouldHandleFindShortcut }'),
   await moduleWrapper('review_queue.mjs', '__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldRestoreSavedQueue }'),
@@ -55,7 +56,7 @@ html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${String(htmlTitle).r
 // `$&` / `$'` sequences that String.prototype.replace would otherwise interpret.
 html = html.replace(/\s*<script src="\/preload\.js"><\/script>/, () => '')
   .replace(/<link rel="stylesheet" href="\/styles\.css\?v=\d+"\s*\/>/, () => `<style>${styles}</style>`)
-  .replace(/\s*<script src="\/(?:notes_format|in_page_search|review_queue|app)\.js\?v=\d+"><\/script>/g, () => '');
+  .replace(/\s*<script src="\/(?:i18n|notes_format|in_page_search|review_queue|app)\.js\?v=\d+"><\/script>/g, () => '');
 html = html.replace('</body>', () => `<script type="module">\n${scripts}\n</script>\n</body>`);
 await writeFile(resolve(dist, 'app.html'), html);
 

@@ -11,6 +11,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist/antigravity-showcase.html");
 
 const modules = [
+  { id: "i18n", file: "js/i18n.js" },
   { id: "data", file: "js/data.js" },
   { id: "store", file: "js/store.js" },
   { id: "plugin_bundle", file: "js/plugin_bundle.js" },

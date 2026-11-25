@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1738,42 +1738,42 @@ mark.find-mark.is-active {
           <span id="project-badge" class="badge project-chip hidden"></span>
         </div>
         <div class="topbar-actions">
-          <select id="project-select" class="select" aria-label="选择项目"></select>
-          <button id="btn-find" class="btn btn-ghost btn-icon-only" type="button" title="页内搜索 (⌘F / Ctrl+F)" aria-label="页内搜索" aria-pressed="false">
+          <select id="project-select" class="select" aria-label="Select project"></select>
+          <button id="btn-find" class="btn btn-ghost btn-icon-only" type="button" title="Find in page (⌘F / Ctrl+F)" aria-label="Find in page" aria-pressed="false">
             <svg class="btn-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="7" cy="7" r="4.5"></circle>
               <path d="M10.5 10.5L14 14"></path>
             </svg>
           </button>
-          <button id="btn-home" class="btn btn-ghost" type="button" title="项目任务总览">
+          <button id="btn-home" class="btn btn-ghost" type="button" title="Project task overview">
             <svg class="btn-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="2" y="2.5" width="5" height="5" rx="1"></rect>
               <rect x="9" y="2.5" width="5" height="5" rx="1"></rect>
               <rect x="2" y="9.5" width="5" height="4" rx="1"></rect>
               <rect x="9" y="9.5" width="5" height="4" rx="1"></rect>
             </svg>
-            <span class="btn-label">总览</span>
+            <span class="btn-label">Overview</span>
           </button>
-          <button id="btn-refresh" class="btn btn-ghost" type="button" title="刷新">
+          <button id="btn-refresh" class="btn btn-ghost" type="button" title="Refresh">
             <svg class="btn-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M13.5 8a5.5 5.5 0 1 1-1.35-3.6"></path>
               <path d="M13.5 2.5v2.75h-2.75"></path>
             </svg>
-            <span class="btn-label">刷新</span>
+            <span class="btn-label">Refresh</span>
           </button>
-          <button id="btn-settings" class="btn btn-ghost btn-icon-only" type="button" title="设置" aria-label="设置" aria-pressed="false">
+          <button id="btn-settings" class="btn btn-ghost btn-icon-only" type="button" title="Settings" aria-label="Settings" aria-pressed="false">
             <svg class="btn-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="2.3"></circle><path d="M8 1.2v1.4M8 13.4v1.4M1.2 8h1.4M13.4 8h1.4M3.2 3.2l1 1M11.8 11.8l1 1M12.8 3.2l-1 1M4.2 11.8l-1 1"></path><circle cx="8" cy="8" r="5.2"></circle></svg>
           </button>
         </div>
       </div>
-      <div id="find-bar" class="find-bar hidden" role="search" aria-label="页内搜索">
+      <div id="find-bar" class="find-bar hidden" role="search" aria-label="Find in page">
         <div class="search-box find-input-wrap">
           <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="7" cy="7" r="4.5"></circle>
             <path d="M10.5 10.5L14 14"></path>
           </svg>
-          <input id="find-input" class="search-input" type="search" placeholder="页内搜索…" autocomplete="off" spellcheck="false" aria-label="页内搜索关键词" />
-          <button id="btn-find-clear" class="search-clear hidden" type="button" title="清空关键词" aria-label="清空关键词">
+          <input id="find-input" class="search-input" type="search" placeholder="Find in page…" autocomplete="off" spellcheck="false" aria-label="Find in page" />
+          <button id="btn-find-clear" class="search-clear hidden" type="button" title="Clear search" aria-label="Clear search">
             <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
               <path d="M4 4l8 8M12 4l-8 8"></path>
             </svg>
@@ -1781,18 +1781,18 @@ mark.find-mark.is-active {
         </div>
         <span id="find-count" class="find-count mono" aria-live="polite"></span>
         <div class="find-actions">
-          <button id="btn-find-filter" class="btn btn-ghost btn-xs hidden" type="button" title="仅显示包含匹配项的任务卡片" aria-pressed="false">仅匹配</button>
-          <button id="btn-find-prev" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="上一处 (Shift+Enter)" aria-label="上一处" disabled>
+          <button id="btn-find-filter" class="btn btn-ghost btn-xs hidden" type="button" title="Only show matching task cards" aria-pressed="false">Matches only</button>
+          <button id="btn-find-prev" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="Previous match (Shift+Enter)" aria-label="Previous match" disabled>
             <svg class="btn-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M4 10l4-4 4 4"></path>
             </svg>
           </button>
-          <button id="btn-find-next" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="下一处 (Enter)" aria-label="下一处" disabled>
+          <button id="btn-find-next" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="Next match (Enter)" aria-label="Next match" disabled>
             <svg class="btn-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M4 6l4 4 4-4"></path>
             </svg>
           </button>
-          <button id="btn-find-close" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="关闭页内搜索 (Esc)" aria-label="关闭页内搜索">
+          <button id="btn-find-close" class="btn btn-ghost btn-icon-only btn-find-nav" type="button" title="Close find (Esc)" aria-label="Close find">
             <svg class="btn-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
               <path d="M4 4l8 8M12 4l-8 8"></path>
             </svg>
@@ -1805,7 +1805,7 @@ mark.find-mark.is-active {
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
     <main id="app-root" class="main">
-      <div class="empty-state">加载中…</div>
+      <div class="empty-state">Loading…</div>
     </main>
   </div>
 <script type="module">
@@ -1878,6 +1878,57 @@ Boolean requesting whether a visible border and background is provided by the ho
 - "app": Tool callable by the app from this server only`),csp:c.never().optional(),permissions:c.never().optional()}),US=c.object({mimeTypes:c.array(c.string()).optional().describe('Array of supported MIME types for UI resources.\nMust include `"text/html;profile=mcp-app"` for MCP Apps support.')}),DS=c.object({method:c.literal("ui/download-file"),params:c.object({contents:c.array(c.union([Iu,ju])).describe("Resource contents to download \u2014 embedded (inline data) or linked (host fetches). Uses standard MCP resource types.")})}),AS=c.object({method:c.literal("ui/message"),params:c.object({role:c.literal("user").describe('Message role, currently only "user" is supported.'),content:c.array(br).describe("Message content blocks (text, image, etc.).")})}),CS=c.object({method:c.literal("ui/notifications/sandbox-resource-ready"),params:c.object({html:c.string().describe("HTML content to load into the inner iframe."),sandbox:c.string().optional().describe("Optional override for the inner iframe's sandbox attribute."),csp:Du.optional().describe("CSP configuration from resource metadata."),permissions:Au.optional().describe("Sandbox permissions from resource metadata.")})}),R_=c.object({method:c.literal("ui/notifications/tool-result"),params:xr.describe("Standard MCP tool execution result.")}),xp=c.object({toolInfo:c.object({id:vr.optional().describe("JSON-RPC id of the tools/call request."),tool:$o.describe("Tool definition including name, inputSchema, etc.")}).optional().describe("Metadata of the tool call that instantiated this App."),theme:__.optional().describe("Current color theme preference."),styles:j_.optional().describe("Style configuration for theming the app."),displayMode:yn.optional().describe("How the UI is currently displayed."),availableDisplayModes:c.array(yn).optional().describe("Display modes the host supports."),containerDimensions:c.union([c.object({height:c.number().describe("Fixed container height in pixels.")}),c.object({maxHeight:c.union([c.number(),c.undefined()]).optional().describe("Maximum container height in pixels.")})]).and(c.union([c.object({width:c.number().describe("Fixed container width in pixels.")}),c.object({maxWidth:c.union([c.number(),c.undefined()]).optional().describe("Maximum container width in pixels.")})])).optional().describe(`Container dimensions. Represents the dimensions of the iframe or other
 container holding the app. Specify either width or maxWidth, and either height or maxHeight.`),locale:c.string().optional().describe("User's language and region preference in BCP 47 format."),timeZone:c.string().optional().describe("User's timezone in IANA format."),userAgent:c.string().optional().describe("Host application identifier."),platform:c.union([c.literal("web"),c.literal("desktop"),c.literal("mobile")]).optional().describe("Platform type for responsive design decisions."),deviceCapabilities:c.object({touch:c.boolean().optional().describe("Whether the device supports touch input."),hover:c.boolean().optional().describe("Whether the device supports hover interactions.")}).optional().describe("Device input capabilities."),safeAreaInsets:c.object({top:c.number().describe("Top safe area inset in pixels."),right:c.number().describe("Right safe area inset in pixels."),bottom:c.number().describe("Bottom safe area inset in pixels."),left:c.number().describe("Left safe area inset in pixels.")}).optional().describe("Mobile safe area boundaries in pixels.")}).passthrough(),Z_=c.object({method:c.literal("ui/notifications/host-context-changed"),params:xp.describe("Partial context update containing only changed fields.")}),MS=c.object({method:c.literal("ui/update-model-context"),params:c.object({content:c.array(br).optional().describe("Context content blocks (text, image, etc.)."),structuredContent:c.record(c.string(),c.unknown().describe("Structured content for machine-readable context data.")).optional().describe("Structured content for machine-readable context data.")})}),LS=c.object({method:c.literal("ui/initialize"),params:c.object({appInfo:mn.describe("App identification (name and version)."),appCapabilities:O_.describe("Features and capabilities this app provides."),protocolVersion:c.string().describe("Protocol version this app supports.")})}),U_=c.object({protocolVersion:c.string().describe('Negotiated protocol version string (e.g., "2025-11-21").'),hostInfo:mn.describe("Host application identification and version."),hostCapabilities:P_.describe("Features and capabilities provided by the host."),hostContext:xp.describe("Rich context about the host environment.")}).passthrough(),D_={target:"draft-2020-12"};async function yp(t,e){let n=t["~standard"];if(n.jsonSchema)return n.jsonSchema[e](D_);if(n.vendor==="zod"){let{z:o}=await Promise.resolve().then(()=>(cn(),fu));return o.toJSONSchema(t,{io:e})}throw Error(`Schema (vendor: ${n.vendor}) does not implement Standard JSON Schema (~standard.jsonSchema). Use a library that does (zod v4, ArkType, Valibot) or wrap your schema accordingly.`)}async function bp(t,e,n=""){let o=await t["~standard"].validate(e);if(o.issues){let r=o.issues.map(i=>{let a=i.path?.map(s=>typeof s=="object"?s.key:s).join(".");return a?`${a}: ${i.message}`:i.message}).join("; ");throw Error(n+r)}return o.value}function $p(t){let e=document.documentElement;e.setAttribute("data-theme",t),e.style.colorScheme=t}function kp(t,e=document.documentElement){for(let[n,o]of Object.entries(t))o!==void 0&&e.style.setProperty(n,o)}var zo=class t extends Zu{_appInfo;_capabilities;options;_hostCapabilities;_hostInfo;_hostContext;_registeredTools={};_initializedSent=!1;_assertInitialized(e){if(this._initializedSent)return;let n=`[ext-apps] App.${e}() called before connect() completed the ui/initialize handshake. Await app.connect() before calling this method, or move data loading to an ontoolresult handler.`;if(this.options?.strict)throw Error(n);console.warn(`${n}. This will throw in a future release.`)}eventSchemas={toolinput:z_,toolinputpartial:S_,toolresult:R_,toolcancelled:w_,hostcontextchanged:Z_};static ONE_SHOT_EVENTS=new Set(["toolinput","toolinputpartial","toolresult","toolcancelled"]);_everHadListener=new Set;_assertHandlerTiming(e){if(!t.ONE_SHOT_EVENTS.has(e)||this._everHadListener.has(e)||(this._everHadListener.add(e),!this._initializedSent))return;let n=`[ext-apps] "${String(e)}" handler registered after connect() completed the ui/initialize handshake. The host may have already sent this notification. Register handlers before calling app.connect().`;if(this.options?.strict)throw Error(n);console.warn(n)}setEventHandler(e,n){n&&this._assertHandlerTiming(e),super.setEventHandler(e,n)}addEventListener(e,n){this._assertHandlerTiming(e),super.addEventListener(e,n)}onEventDispatch(e,n){e==="hostcontextchanged"&&(this._hostContext={...this._hostContext,...n})}constructor(e,n={},o={autoResize:!0}){super(o),this._appInfo=e,this._capabilities=n,this.options=o,o.allowUnsafeEval||c.config({jitless:!0}),this.setRequestHandler(_r,r=>(console.log("Received ping:",r.params),{})),this.setEventHandler("hostcontextchanged",void 0)}registerCapabilities(e){if(this.transport)throw Error("Cannot register capabilities after transport is established");this._capabilities=vp(this._capabilities,e)}registerTool(e,n,o){if(this._registeredTools[e])throw Error(`Tool ${e} is already registered`);let r=this,i=()=>{r._initializedSent&&r._capabilities.tools?.listChanged&&r.sendToolListChanged()},a=n.inputSchema!==void 0,s={title:n.title,description:n.description,inputSchema:n.inputSchema,outputSchema:n.outputSchema,annotations:n.annotations,_meta:n._meta,enabled:!0,enable(){this.enabled=!0,i()},disable(){this.enabled=!1,i()},update(u){Object.assign(this,u),i()},remove(){r._registeredTools[e]===s&&(delete r._registeredTools[e],i())},handler:async(u,l)=>{if(!s.enabled)throw Error(`Tool ${e} is disabled`);let m;if(a){let p=s.inputSchema,k=p?await bp(p,u??{},`Invalid input for tool ${e}: `):u??{};m=await o(k,l)}else m=await o(l);return s.outputSchema&&!m.isError&&(m.structuredContent=await bp(s.outputSchema,m.structuredContent,`Invalid output for tool ${e}: `)),m}};return this._registeredTools[e]=s,!this._capabilities.tools&&!this.transport&&this.registerCapabilities({tools:{listChanged:!0}}),this.ensureToolHandlersInitialized(),i(),s}_toolHandlersInitialized=!1;ensureToolHandlersInitialized(){this._toolHandlersInitialized||(this._toolHandlersInitialized=!0,this.oncalltool=async(e,n)=>{let o=this._registeredTools[e.name];if(!o)throw Error(`Tool ${e.name} not found`);return o.handler(e.arguments,n)},this.onlisttools=async(e,n)=>({tools:await Promise.all(Object.entries(this._registeredTools).filter(([o,r])=>r.enabled).map(async([o,r])=>{let i={name:o,title:r.title,description:r.description,inputSchema:r.inputSchema?await yp(r.inputSchema,"input"):{type:"object",properties:{}}};return r.outputSchema&&(i.outputSchema=await yp(r.outputSchema,"output")),r.annotations&&(i.annotations=r.annotations),r._meta&&(i._meta=r._meta),i}))}))}async sendToolListChanged(e={}){this._assertInitialized("sendToolListChanged"),await this.notification({method:"notifications/tools/list_changed",params:e})}getHostCapabilities(){return this._hostCapabilities}getHostVersion(){return this._hostInfo}getHostContext(){return this._hostContext}get ontoolinput(){return this.getEventHandler("toolinput")}set ontoolinput(e){this.setEventHandler("toolinput",e)}get ontoolinputpartial(){return this.getEventHandler("toolinputpartial")}set ontoolinputpartial(e){this.setEventHandler("toolinputpartial",e)}get ontoolresult(){return this.getEventHandler("toolresult")}set ontoolresult(e){this.setEventHandler("toolresult",e)}get ontoolcancelled(){return this.getEventHandler("toolcancelled")}set ontoolcancelled(e){this.setEventHandler("toolcancelled",e)}get onhostcontextchanged(){return this.getEventHandler("hostcontextchanged")}set onhostcontextchanged(e){this.setEventHandler("hostcontextchanged",e)}_onteardown;get onteardown(){return this._onteardown}set onteardown(e){this.warnIfRequestHandlerReplaced("onteardown",this._onteardown,e),this._onteardown=e,this.replaceRequestHandler(T_,(n,o)=>{if(!this._onteardown)throw Error("No onteardown handler set");return this._onteardown(n.params,o)})}_oncalltool;get oncalltool(){return this._oncalltool}set oncalltool(e){this.warnIfRequestHandlerReplaced("oncalltool",this._oncalltool,e),this._oncalltool=e,this.replaceRequestHandler(Pu,(n,o)=>{if(!this._oncalltool)throw Error("No oncalltool handler set");return this._oncalltool(n.params,o)})}_onlisttools;get onlisttools(){return this._onlisttools}set onlisttools(e){this.warnIfRequestHandlerReplaced("onlisttools",this._onlisttools,e),this._onlisttools=e,this.replaceRequestHandler(Tu,(n,o)=>{if(!this._onlisttools)throw Error("No onlisttools handler set");return this._onlisttools(n.params,o)})}assertCapabilityForMethod(e){switch(e){case"sampling/createMessage":if(!this._hostCapabilities?.sampling)throw Error(`Host does not support sampling (required for ${e})`);break}}assertRequestHandlerCapability(e){switch(e){case"tools/call":case"tools/list":if(!this._capabilities.tools)throw Error(`Client does not support tool capability (required for ${e})`);return;case"ping":case"ui/resource-teardown":return;default:throw Error(`No handler for method ${e} registered`)}}assertNotificationCapability(e){}assertTaskCapability(e){throw Error("Tasks are not supported in MCP Apps")}assertTaskHandlerCapability(e){throw Error("Task handlers are not supported in MCP Apps")}async callServerTool(e,n){if(this._assertInitialized("callServerTool"),typeof e=="string")throw Error(`callServerTool() expects an object as its first argument, but received a string ("${e}"). Did you mean: callServerTool({ name: "${e}", arguments: { ... } })?`);return await this.request({method:"tools/call",params:e},xr,{onprogress:()=>{},resetTimeoutOnProgress:!0,...n})}async readServerResource(e,n){return this._assertInitialized("readServerResource"),await this.request({method:"resources/read",params:e},ku,n)}async listServerResources(e,n){return this._assertInitialized("listServerResources"),await this.request({method:"resources/list",params:e},xu,n)}async createSamplingMessage(e,n){this._assertInitialized("createSamplingMessage");let o=e.tools?Nu:Ou;return await this.request({method:"sampling/createMessage",params:e},o,n)}sendMessage(e,n){return this._assertInitialized("sendMessage"),this.request({method:"ui/message",params:e},k_,n)}sendLog(e){return this.notification({method:"notifications/message",params:e})}updateModelContext(e,n){return this._assertInitialized("updateModelContext"),this.request({method:"ui/update-model-context",params:e},mo,n)}openLink(e,n){return this._assertInitialized("openLink"),this.request({method:"ui/open-link",params:e},x_,n)}sendOpenLink=this.openLink;downloadFile(e,n){return this._assertInitialized("downloadFile"),this.request({method:"ui/download-file",params:e},$_,n)}requestTeardown(e={}){return this.notification({method:"ui/notifications/request-teardown",params:e})}requestDisplayMode(e,n){return this._assertInitialized("requestDisplayMode"),this.request({method:"ui/request-display-mode",params:e},N_,n)}sendSizeChanged(e){return this.notification({method:"ui/notifications/size-changed",params:e})}setupSizeChangedNotifications(){let e=!1,n=0,o=0,r=()=>{e||(e=!0,requestAnimationFrame(()=>{e=!1;let a=document.documentElement,s=a.style.height;a.style.height="max-content";let u=Math.ceil(a.getBoundingClientRect().height);a.style.height=s;let l=Math.ceil(window.innerWidth);(l!==n||u!==o)&&(n=l,o=u,this.sendSizeChanged({width:l,height:u}))}))};r();let i=new ResizeObserver(r);return i.observe(document.documentElement),i.observe(document.body),()=>i.disconnect()}async connect(e=new Uu(window.parent,window.parent),n){if(this.transport)throw Error("App is already connected. Call close() before connecting again.");this._initializedSent=!1,await super.connect(e);try{let o=await this.request({method:"ui/initialize",params:{appCapabilities:this._capabilities,appInfo:this._appInfo,protocolVersion:g_}},U_,n);if(o===void 0)throw Error(`Server sent invalid initialize result: ${o}`);this._hostCapabilities=o.hostCapabilities,this._hostInfo=o.hostInfo,this._hostContext=o.hostContext,await this.notification({method:"ui/notifications/initialized"}),this._initializedSent=!0,this.options?.autoResize&&this.setupSizeChangedNotifications()}catch(o){throw this.close(),o}}};var $e=new zo({name:window.__tasksUiConfig?.title||"Beads Tasks",version:"0.1.0"},{}),ne=null,zp=[],Sp=[];$e.ontoolinput=t=>{ne=null,zp.forEach(e=>e(t.arguments||{}))};$e.ontoolresult=t=>{ne=t.structuredContent||null,Sp.forEach(e=>e(ne))};$e.ontoolcancelled=()=>{};function wp(t){t?.theme&&$p(t.theme),t?.styles?.variables&&kp(t.styles.variables)}$e.onhostcontextchanged=t=>{wp(t),window.dispatchEvent(new Event("tasks-host-context"))};var A_={"/api/projects":"ui_get_projects","/api/item":"ui_get_item","/api/batch":"ui_get_batch","/api/list":"ui_list_tasks","/api/bead/status":"ui_update_bead_status","/api/bead/priority":"ui_update_bead_priority","/api/bead/note":"ui_append_bead_note","/api/bead/label":"ui_update_bead_label","/api/clipboard":"ui_copy_clipboard",...window.__tasksUiExt?.mcpRoutes};async function So(t,e){let n=await $e.callServerTool({name:t,arguments:e}),o=n.structuredContent;if(!o)try{o=JSON.parse(n.content?.[0]?.text||"{}")}catch{o={ok:!1,error:n.content?.[0]?.text||"Tool failed"}}return n.isError&&o.ok!==!1&&(o={ok:!1,error:n.content?.[0]?.text||"Tool failed"}),o}function C_(t){let e={detail:"/api/item",batch:"/api/batch",list:"/api/list"}[ne?.view];return!ne||ne.payloadTruncated||t.pathname!==e||t.searchParams.get("force")||(t.searchParams.get("project")||"")!==(ne.project||"")||(t.searchParams.get("repo")||"")!==(ne.repo||"")?!1:ne.view==="detail"?t.searchParams.get("id")===ne.id:ne.view==="batch"?t.searchParams.get("ids")===(ne.ids||[]).join(","):(t.searchParams.get("status")||"")===(ne.status||"")&&(t.searchParams.get("q")||"")===(ne.query||"")&&(Number(t.searchParams.get("limit"))||40)===(Number(ne.limit)||40)}window.__tasksMcpBridge={isMcpApp:!0,async fetch(t,e={}){let n=new URL(t,"http://tasks.local");if(C_(n)){let a={...ne.data,projects:ne.projects,activeProjectId:ne.activeProjectId};return ne=null,{ok:a.ok!==!1,status:a.ok===!1?400:200,text:async()=>JSON.stringify(a)}}["/api/item","/api/batch","/api/list"].includes(n.pathname)&&(ne=null);let o=Object.fromEntries(n.searchParams);o.ids&&(o.ids=o.ids.split(",").filter(Boolean)),o.limit&&(o.limit=Number(o.limit)),o.force&&(o.force=o.force==="1"||o.force==="true"),e.body&&Object.assign(o,JSON.parse(e.body));let r=n.pathname==="/api/settings"?e.method?.toUpperCase()==="POST"?"ui_update_settings":"ui_get_settings":A_[n.pathname],i=await So(r,o);return{ok:i.ok!==!1,status:i.ok===!1?400:200,text:async()=>JSON.stringify(i)}},onToolInput:t=>zp.push(t),onToolResult:t=>Sp.push(t),getInitialPayload:()=>ne,getHostCapabilities:()=>$e.getHostCapabilities(),getHostContext:()=>$e.getHostContext(),updateModelContext:t=>$e.updateModelContext({content:[{type:"text",text:t}]}),clearModelContext:()=>$e.updateModelContext({content:[]}),async sendMessage(t,{newConversation:e=!1}={}){let n=await $e.sendMessage({role:"user",content:[{type:"text",text:t}],...e?{_meta:{"com.google.antigravity/message":{target:"new"}}}:{}});if(n.isError)throw Error("\u5BBF\u4E3B\u62D2\u7EDD\u53D1\u9001\u6D88\u606F");return{conversationId:n._meta?.["com.google.antigravity/message"]?.conversationId}},async openFileInSidePane(t){if(!t.startsWith("/"))throw Error("\u9700\u8981\u7EDD\u5BF9\u8DEF\u5F84");try{if((await $e.request({method:"com.google.antigravity/toggle-aux-pane",params:{tabType:"fileView",uri:`file://${encodeURI(t)}`}},wn.object({}).passthrough())).isError)throw Error("\u5BBF\u4E3B\u4E0D\u652F\u6301\u6253\u5F00\u4FA7\u680F")}catch(e){throw e.code===-32601?Error("\u5BBF\u4E3B\u4E0D\u652F\u6301\u6253\u5F00\u4FA7\u680F"):e}},loadReviewQueue:async()=>(await So("ui_review_queue",{op:"get"})).queue,saveReviewQueue:t=>So("ui_review_queue",{op:"set",queue:t}),clearReviewQueue:()=>So("ui_review_queue",{op:"clear"})};await $e.connect().then(()=>{wp($e.getHostContext()),window.dispatchEvent(new Event("tasks-host-context"))},t=>{let e=t?.message||String(t);window.__tasksMcpBridge.connectError=e;let n=document.getElementById("app-root")||document.body;if(n){n.textContent="";let o=document.createElement("div");o.setAttribute("role","alert"),o.style.cssText="margin:16px;padding:12px 14px;border:1px solid #d9534f;border-radius:6px;font:13px/1.5 system-ui,sans-serif;white-space:pre-wrap;",o.textContent=`\u65E0\u6CD5\u8FDE\u63A5\u5230 Antigravity \u5BBF\u4E3B\uFF1A${e}`,n.appendChild(o)}console.error("tasks MCP bridge: app.connect() failed",t)});
 ;
+(()=>{
+const SUPPORTED_LOCALES = ['en', 'zh-CN'];
+function normalizeLocale(raw) {
+  const value = typeof raw === 'string' ? raw.trim() : '';
+  if (/^zh(?:[-_]|$)/i.test(value)) return 'zh-CN';
+  if (/^en(?:[-_]|$)/i.test(value)) return 'en';
+  return '';
+}
+function resolveLocale({ setting = 'auto', hostLocale = '', configLocale = '', navigatorLocale = '' } = {}) {
+  if (setting === 'en' || setting === 'zh-CN') return setting;
+  for (const value of [hostLocale, configLocale, navigatorLocale]) {
+    const locale = normalizeLocale(value);
+    if (locale) return locale;
+    if (typeof value === 'string' && value.trim()) return 'en';
+  }
+  return 'en';
+}
+const translations = {
+  '设置': 'Settings', '界面语言': 'Language', '自动': 'Auto', '返回': 'Back', '总览': 'Overview', '列表': 'List', '刷新': 'Refresh',
+  '选择项目': 'Select project', '默认项目': 'Default project', '页内搜索': 'Find in page', '页内搜索 (⌘F / Ctrl+F)': 'Find in page (⌘F / Ctrl+F)',
+  '页内搜索…': 'Find in page…', '页内搜索关键词': 'Find in page', '清空关键词': 'Clear search', '仅匹配': 'Matches only', '仅显示包含匹配项的任务卡片': 'Only show matching task cards', '上一处': 'Previous match', '下一处': 'Next match', '上一处 (Shift+Enter)': 'Previous match (Shift+Enter)', '下一处 (Enter)': 'Next match (Enter)', '关闭页内搜索': 'Close find', '关闭页内搜索 (Esc)': 'Close find (Esc)',
+  '项目任务总览': 'Project task overview', '搜索 ID / 标题 / 标签…': 'Search ID / title / label…', '清除搜索': 'Clear search', '搜索': 'Search', '全部': 'All', '加载中…': 'Loading…', '逐条查看 ▶': 'Review step by step ▶',
+  '暂无匹配的 Beads 任务': 'No matching Beads tasks', '当前筛选条件下无匹配任务': 'No tasks match the current filter', '没有匹配的任务': 'No matching tasks', '已看': 'Viewed', '上一条': 'Previous', '下一条': 'Next', '已到队尾 · 返回列表': 'End of queue · Back to list',
+  '点击复制 Bead ID': 'Copy Bead ID', '点击复制 Task ID': 'Copy Task ID', '点击复制 ID': 'Copy ID', '复制 ID': 'Copy ID', '已复制': 'Copied', '已复制 ID': 'Copied ID', '复制失败，请手动选中复制': 'Copy failed; please select and copy manually',
+  '(无标题)': '(Untitled)', '任务列表': 'Tasks', '本轮任务': 'Current tasks', '打开单卡': 'Open task', '展开完整详情': 'Expand full details', '在卡片内看完整详情': 'View full details in card', '附到对话': 'Attach to conversation', '清除上下文': 'Clear context', '发到当前对话': 'Send to current conversation', '新开会话': 'New conversation', '新开会话处理': 'Handle in new conversation', '操作成功': 'Completed',
+  '搜索 / 直达 Beads ID': 'Search / open Beads ID', '输入 Beads ID 直达，或关键词搜索…': 'Enter a Beads ID or search keywords…', '打开/搜索': 'Open / Search', '搜列表': 'Search list', '关闭搜索': 'Close search', '请输入 ID 或关键词': 'Enter an ID or keywords', '未找到精确 ID，已按关键词搜索列表': 'Exact ID not found; searched the list instead',
+  '移除标签': 'Remove label', '新增标签…': 'Add label…', '+ 标签': '+ Label', '状态与备注': 'Status and notes', '状态更新': 'Update status', '更新': 'Update', '优先级': 'Priority', '应用': 'Apply', '可选：关闭或重开原因 (--reason)…': 'Optional: reason for closing or reopening (--reason)…', '追加备注 (bd note / --append-notes)': 'Append note (bd note / --append-notes)', '输入备注内容…': 'Enter a note…', '追加 Note': 'Append note', '备注内容不能为空': 'Note cannot be empty', '已追加备注': 'Note added',
+  '补充说明 / 驳回意见…': 'Additional notes / rejection reason…', '带说明发送': 'Send with note', '发送': 'Send', '取消': 'Cancel', '已发送到当前对话': 'Sent to current conversation', '请先输入说明内容，或直接用「发到当前对话」': 'Enter a note, or send directly to the current conversation',
+  '加载设置中…': 'Loading settings…', '聊天输出与链接': 'Chat output and links', '输出时携带 Sidecar 链接': 'Include Sidecar links in output', '开启时，Agent 回复中的任务 ID 会附带 [⧉] / [↗] 与底部侧栏入口链接；关闭后仅输出纯行内代码（MCP Inline 卡片不受影响），无需重启、下一轮对话即生效。': 'When enabled, task IDs in agent replies include Sidecar links. When disabled, IDs are plain inline code. MCP Inline cards are unaffected. Changes apply to the next conversation turn.', '配置文件': 'Settings file', '复制路径': 'Copy path', '已复制路径': 'Path copied',
+  '状态: {status} · 优先级: {priority}': 'Status: {status} · Priority: {priority}', '…（完整内容请查看任务详情）': '… (see task details for the full content)',
+  '请继续处理任务：': 'Please continue working on this task:', '请继续处理以下任务：': 'Please continue working on the following task:',
+  '已新开后台会话 ({id})': 'Started a new background conversation ({id})', '未找到': 'Not found', '本轮任务列表': 'Current task list', '未找到的 ID': 'IDs not found', '（点击复制）': '(click to copy)',
+  '批量加载失败': 'Failed to load tasks', '列表加载失败': 'Failed to load list', '收起为简介': 'Collapse to preview', '返回批处理': 'Back to batch', '返回列表': 'Back to list',
+  '状态已更新为 {status}': 'Status updated to {status}', '状态更新失败: {error}': 'Failed to update status: {error}', '优先级已更新为 P{priority}': 'Priority updated to P{priority}', '优先级更新失败: {error}': 'Failed to update priority: {error}',
+  '追加备注失败: {error}': 'Failed to add note: {error}', '已添加标签 #{label}': 'Added label #{label}', '添加标签失败: {error}': 'Failed to add label: {error}', '已移除标签 #{label}': 'Removed label #{label}', '移除标签失败: {error}': 'Failed to remove label: {error}',
+  '{count}项': '{count} items', '当前页内无匹配 “{query}” 的任务': 'No tasks on this page match “{query}”', '正在读取': 'Loading', '读取失败': 'Failed to load', '读取设置失败': 'Failed to load settings', '初始化失败': 'Initialization failed', '简体中文': 'Simplified Chinese',
+  '已开启输出 Sidecar 链接（下一轮对话生效）': 'Sidecar links enabled (effective on the next conversation turn)', '已关闭输出 Sidecar 链接（下一轮对话生效）': 'Sidecar links disabled (effective on the next conversation turn)', '设置保存失败: {error}': 'Failed to save settings: {error}',
+  'Parent': 'Parent', 'Child': 'Child', 'Close reason': 'Close reason',
+  'Summary': 'Summary', 'Description': 'Description', 'Acceptance Criteria': 'Acceptance Criteria', 'Relations': 'Relations', 'Latest Reply': 'Latest Reply', 'Notes': 'Notes', 'Copy': 'Copy', 'Project': 'Project', 'Assignee': 'Assignee', 'Created': 'Created', 'Updated': 'Updated', 'Closed': 'Closed', 'Close Bead': 'Close Bead', 'Reopen Bead': 'Reopen Bead',
+};
+const zhOverrides = { Parent: '父任务', Child: '子任务', 'Close reason': '关闭原因', Summary: '处理简介', Description: '描述', 'Acceptance Criteria': '验收标准', Relations: '关联关系', 'Latest Reply': '最新回复', Notes: '备注', Copy: '复制', Project: '项目', Assignee: '负责人', Created: '创建时间', Updated: '更新时间', Closed: '关闭时间', 'Close Bead': '关闭 Bead', 'Reopen Bead': '重开 Bead' };
+const MESSAGES = {
+  en: Object.fromEntries(Object.entries(translations)),
+  'zh-CN': Object.fromEntries(Object.keys(translations).map(key => [key, zhOverrides[key] || key])),
+};
+function createTranslator(locale) {
+  return (key, vars = {}) => (MESSAGES[locale]?.[key] ?? MESSAGES.en[key] ?? key).replace(/\{([^{}]+)\}/g, (match, name) => Object.hasOwn(vars, name) ? String(vars[name]) : match);
+}
+
+window.__tasksI18n = { SUPPORTED_LOCALES, normalizeLocale, resolveLocale, MESSAGES, createTranslator };
+})();;
 (()=>{
 function formatBeadNotesForDisplay(notes) {
   if (typeof notes !== 'string' || !notes.trim()) return '';
@@ -2092,10 +2143,37 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     listQuery: '',
     busy: false,
     settingsOpen: false,
-    settings: { version: 1, emitSidecarLinks: true },
+    settings: { version: 1, emitSidecarLinks: true, locale: 'auto' },
     settingsPath: '',
   };
 
+  const i18n = window.__tasksI18n;
+  let locale = 'en';
+  let t = i18n.createTranslator(locale);
+  function applyLocale() {
+    locale = i18n.resolveLocale({ setting: state.settings.locale, hostLocale: bridge?.getHostContext?.()?.locale, configLocale: window.__tasksUiConfig?.locale, navigatorLocale: navigator.language });
+    t = i18n.createTranslator(locale);
+    document.documentElement.lang = locale;
+    const fields = {
+      'project-select': { 'aria-label': t('选择项目') }, 'btn-find': { title: t('页内搜索 (⌘F / Ctrl+F)'), 'aria-label': t('页内搜索') },
+      'btn-home': { title: t('项目任务总览') }, 'btn-refresh': { title: t('刷新') }, 'btn-settings': { title: t('设置'), 'aria-label': t('设置') },
+      'find-bar': { 'aria-label': t('页内搜索') }, 'find-input': { placeholder: t('页内搜索…'), 'aria-label': t('页内搜索关键词') },
+      'btn-find-clear': { title: t('清空关键词'), 'aria-label': t('清空关键词') }, 'btn-find-filter': { title: t('仅显示包含匹配项的任务卡片') },
+      'btn-find-prev': { title: t('上一处 (Shift+Enter)'), 'aria-label': t('上一处') }, 'btn-find-next': { title: t('下一处 (Enter)'), 'aria-label': t('下一处') },
+      'btn-find-close': { title: t('关闭页内搜索 (Esc)'), 'aria-label': t('关闭页内搜索') },
+    };
+    for (const [id, attrs] of Object.entries(fields)) for (const [attr, key] of Object.entries(attrs)) $(id)?.setAttribute(attr, t(key));
+    $('btn-home').querySelector('.btn-label').textContent = t('总览');
+    $('btn-refresh').querySelector('.btn-label').textContent = t('刷新');
+    $('btn-find-filter').textContent = t('仅匹配');
+    renderProjectSelector();
+  }
+  window.addEventListener('tasks-host-context', () => {
+    if (state.settings.locale !== 'auto') return;
+    const old = locale;
+    applyLocale();
+    if (old !== locale) void renderCurrentView();
+  });
   const { queueNeighbors, shouldHandleQueueShortcut, shouldRestoreSavedQueue } = window.__tasksReviewQueue;
   const storageKey = window.__tasksUiConfig?.storageKey || 'beads-tasks-review-queue';
   let queue = { ids: [], metaById: {}, source: 'batch', title: '', project: '', repo: '', visitedIds: [] };
@@ -2286,7 +2364,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     if (!iso) return '';
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return String(iso);
-    return d.toLocaleString('zh-CN', { hour12: false });
+    return d.toLocaleString(locale, { hour12: false });
   }
 
   function formatShortTime(iso) {
@@ -2536,7 +2614,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     await postJson('/api/clipboard', { text });
   }
 
-  async function copyText(text, triggerEl = null, label = '已复制', options = {}) {
+  async function copyText(text, triggerEl = null, label = t('已复制'), options = {}) {
     if (!text) return false;
     const preferNative = Boolean(options?.preferNative);
     const channels = preferNative
@@ -2557,7 +2635,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
 
     if (!copied) {
       console.error('[tasks] clipboard copy failed:', errors);
-      showToast('复制失败，请手动选中复制', 'err');
+      showToast(t('复制失败，请手动选中复制'), 'err');
       return false;
     }
 
@@ -2590,7 +2668,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   function renderProjectSelector() {
     const sel = $('project-select');
     if (!state.projects.length) {
-      sel.innerHTML = '<option value="">默认项目</option>';
+      sel.innerHTML = `<option value="">${t('默认项目')}</option>`;
       return;
     }
     const current = state.project || state.activeProjectId || state.projects[0]?.id || '';
@@ -2662,11 +2740,11 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       batchNav.classList.remove('hidden');
       batchNav.innerHTML = `
         <div class="queue-head"><div class="batch-nav-group">
-          <button type="button" class="btn btn-xs" id="btn-back-batch">← ${queue.source === 'list' ? '总览' : '列表'} (${total})</button>
-          <span class="muted">${index + 1} / ${total} · 已看 ${visitedCount}</span>
+          <button type="button" class="btn btn-xs" id="btn-back-batch">← ${queue.source === 'list' ? t('总览') : t('列表')} (${total})</button>
+          <span class="muted">${index + 1} / ${total} · ${t('已看')} ${visitedCount}</span>
         </div><div class="batch-nav-group">
-          <button type="button" class="btn btn-xs" id="btn-prev-item" title="← / [" ${prev ? '' : 'disabled'}>‹ 上一条</button>
-          <button type="button" class="btn btn-xs" id="btn-next-item" title="→ / ]" ${next ? '' : 'disabled'}>下一条 ›</button>
+          <button type="button" class="btn btn-xs" id="btn-prev-item" title="← / [" ${prev ? '' : 'disabled'}>‹ ${t('上一条')}</button>
+          <button type="button" class="btn btn-xs" id="btn-next-item" title="→ / ]" ${next ? '' : 'disabled'}>${t('下一条')} ›</button>
         </div></div>
         <div class="queue-rail">${queue.ids.map((id) => `<button type="button" class="btn btn-xs mono ${id === state.id ? 'is-active' : visitedIds.has(id) ? 'is-visited' : ''}" data-queue-id="${esc(id)}" title="${esc(queue.metaById?.[id]?.title || id)}">${id === state.id ? '● ' : visitedIds.has(id) ? '✓ ' : ''}${esc(id.length > 20 ? `${id.slice(0, 17)}…` : id)}</button>`).join('')}</div>`;
       $('btn-back-batch').onclick = backToList;
@@ -2683,14 +2761,14 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   function renderCardIdBadges({ beadId = '', taskId = '', fallbackId = '' }) {
     const badges = [];
     if (beadId) {
-      badges.push(`<button type="button" class="id-badge" data-copy="${esc(beadId)}" title="点击复制 Bead ID">${esc(beadId)} ⎘</button>`);
+      badges.push(`<button type="button" class="id-badge" data-copy="${esc(beadId)}" title="${t('点击复制 Bead ID')}">${esc(beadId)} ⎘</button>`);
     }
     if (taskId) {
       const label = beadId ? `#${taskId.slice(0, 8)}` : `#${taskId}`;
-      badges.push(`<button type="button" class="id-badge-task" data-copy="${esc(taskId)}" title="点击复制 Task ID">${esc(label)} ⎘</button>`);
+      badges.push(`<button type="button" class="id-badge-task" data-copy="${esc(taskId)}" title="${t('点击复制 Task ID')}">${esc(label)} ⎘</button>`);
     }
     if (!badges.length && fallbackId) {
-      badges.push(`<button type="button" class="id-badge" data-copy="${esc(fallbackId)}" title="点击复制 ID">${esc(fallbackId)} ⎘</button>`);
+      badges.push(`<button type="button" class="id-badge" data-copy="${esc(fallbackId)}" title="${t('点击复制 ID')}">${esc(fallbackId)} ⎘</button>`);
     }
     return badges.join('');
   }
@@ -2728,7 +2806,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const total = steps.length || task.steps_total || 0;
     const done = steps.length ? steps.filter((step) => step.status === 'done').length : (task.steps_done || 0);
     const current = steps.find((step) => ['running', 'waiting_approval', 'needs_human', 'failed'].includes(step.status));
-    return { bead, detail, task, steps, total, done, current, id: item.id || bead.id || task.id || '', title: bead.title || task.title || item.title || '(无标题)' };
+    return { bead, detail, task, steps, total, done, current, id: item.id || bead.id || task.id || '', title: bead.title || task.title || item.title || t('(无标题)') };
   }
 
   function buildTaskContextSummary(item) {
@@ -2736,9 +2814,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const truncate = (value, limit, suffix) => typeof value === 'string' && value.length > limit ? `${value.slice(0, limit)}${suffix}` : value;
     return [
       `## ${id}: ${title}`,
-      `状态: ${bead.status || task.status || 'unknown'} · 优先级: ${bead.priority ?? 'unknown'}`,
-      bead.description && `### 描述\n${truncate(bead.description, 800, '…（完整内容请查看任务详情）')}`,
-      bead.acceptance_criteria && `### 验收标准\n${truncate(bead.acceptance_criteria, 500, '…')}`,
+      t('状态: {status} · 优先级: {priority}', { status: bead.status || task.status || 'unknown', priority: bead.priority ?? 'unknown' }),
+      bead.description && `### ${t('Description')}\n${truncate(bead.description, 800, t('…（完整内容请查看任务详情）'))}`,
+      bead.acceptance_criteria && `### ${t('Acceptance Criteria')}\n${truncate(bead.acceptance_criteria, 500, '…')}`,
       ...(ext.buildConversationPromptExtras?.(item, { inlineParts }) || []),
     ].filter(Boolean).join('\n\n');
   }
@@ -2762,21 +2840,21 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       button.textContent = label;
       button.onclick = async (event) => {
         event.stopPropagation();
-        try { const result = await action(); if (result !== false) showToast(result?.conversationId ? `已新开后台会话 (${result.conversationId})` : '操作成功'); }
+        try { const result = await action(); if (result !== false) showToast(result?.conversationId ? t('已新开后台会话 ({id})', { id: result.conversationId }) : t('操作成功')); }
         catch (err) { showToast(err.message, 'err'); }
       };
       container.append(button);
     };
     if (caps.updateModelContext) {
-      add('附到对话', async () => { await bridge.updateModelContext(inlineSummary(item)); state.inlineContextAttached = true; renderActions(); return false; });
-      if (state.inlineContextAttached) add('清除上下文', async () => { await bridge.clearModelContext(); state.inlineContextAttached = false; renderActions(); return false; });
+      add(t('附到对话'), async () => { await bridge.updateModelContext(inlineSummary(item)); state.inlineContextAttached = true; renderActions(); return false; });
+      if (state.inlineContextAttached) add(t('清除上下文'), async () => { await bridge.clearModelContext(); state.inlineContextAttached = false; renderActions(); return false; });
     }
     if (caps.message) {
-      add('发到当前对话', () => bridge.sendMessage(`请继续处理任务：\n${inlineSummary(item)}`));
-      add('新开会话', () => bridge.sendMessage(`请继续处理任务：\n${inlineSummary(item)}`, { newConversation: true }));
+      add(t('发到当前对话'), () => bridge.sendMessage(`${t('请继续处理任务：')}\n${inlineSummary(item)}`));
+      add(t('新开会话'), () => bridge.sendMessage(`${t('请继续处理任务：')}\n${inlineSummary(item)}`, { newConversation: true }));
     }
     ext.collectInlineActions?.(item, { inlineParts, bridge, fullLink, add });
-    add(fullLink ? '在卡片内看完整详情' : '展开完整详情', () => {
+    add(fullLink ? t('在卡片内看完整详情') : t('展开完整详情'), () => {
       if (!state.id) state.inlineSource = inlineSnapshot();
       state.id = item.id;
       state.inlineExpandedDetail = true;
@@ -2789,7 +2867,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
 
   function inlineLine(item) {
     const { bead, task, id, title } = inlineParts(item);
-    return `${renderStatusBadge(bead.status || task.status || item.status || 'unknown')}${renderPriorityBadge(bead.priority ?? item.priority)}<span class="inline-id mono">${esc(id)}</span><button type="button" class="btn btn-xs inline-copy" data-copy="${esc(id)}" aria-label="复制 ID" title="复制 ID">⎘</button><span class="inline-title" title="${esc(title)}">${esc(title)}</span>${ext.renderInlineProgress?.(item, { inlineParts }) || ''}`;
+    return `${renderStatusBadge(bead.status || task.status || item.status || 'unknown')}${renderPriorityBadge(bead.priority ?? item.priority)}<span class="inline-id mono">${esc(id)}</span><button type="button" class="btn btn-xs inline-copy" data-copy="${esc(id)}" aria-label="${t('复制 ID')}" title="${t('复制 ID')}">⎘</button><span class="inline-title" title="${esc(title)}">${esc(title)}</span>${ext.renderInlineProgress?.(item, { inlineParts }) || ''}`;
   }
 
   function bindInlineCopy(root) {
@@ -2818,12 +2896,12 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const current = inlineSnapshot();
     const origin = state.inlineOrigin;
     const changed = origin && (current.view !== origin.view || current.id !== origin.id || current.ids.join('\n') !== origin.ids.join('\n') || (current.view === 'list' && (current.status !== origin.status || current.query !== origin.query)));
-    return `<div class="inline-controls">${changed ? '<button type="button" class="btn btn-xs inline-back">← 返回</button>' : ''}${current.view !== 'list' ? '<button type="button" class="btn btn-xs inline-show-list">列表</button>' : ''}<button type="button" class="btn btn-xs inline-search-toggle" title="搜索 / 直达 Beads ID" aria-label="搜索 / 直达 Beads ID">🔍</button><button type="button" class="btn btn-xs inline-refresh" title="刷新" aria-label="刷新">↻</button></div>`;
+    return `<div class="inline-controls">${changed ? `<button type="button" class="btn btn-xs inline-back">← ${t('返回')}</button>` : ''}${current.view !== 'list' ? `<button type="button" class="btn btn-xs inline-show-list">${t('列表')}</button>` : ''}<button type="button" class="btn btn-xs inline-search-toggle" title="${t('搜索 / 直达 Beads ID')}" aria-label="${t('搜索 / 直达 Beads ID')}">🔍</button><button type="button" class="btn btn-xs inline-refresh" title="${t('刷新')}" aria-label="${t('刷新')}">↻</button></div>`;
   }
 
   function inlineSearchBar() {
     const visible = state.inlineSearchOpen || (!state.id && !state.ids.length && state.listQuery);
-    return `<div class="inline-search-bar${visible ? '' : ' hidden'}"><input class="inline-search-input" type="search" placeholder="输入 Beads ID 直达，或关键词搜索…" value="${esc(state.inlineSearchValue)}" /><button type="button" class="btn btn-xs inline-search-submit">打开/搜索</button><button type="button" class="btn btn-xs inline-search-list">搜列表</button><button type="button" class="btn btn-xs inline-search-close" aria-label="关闭搜索">×</button></div>`;
+    return `<div class="inline-search-bar${visible ? '' : ' hidden'}"><input class="inline-search-input" type="search" placeholder="${t('输入 Beads ID 直达，或关键词搜索…')}" value="${esc(state.inlineSearchValue)}" /><button type="button" class="btn btn-xs inline-search-submit">${t('打开/搜索')}</button><button type="button" class="btn btn-xs inline-search-list">${t('搜列表')}</button><button type="button" class="btn btn-xs inline-search-close" aria-label="${t('关闭搜索')}">×</button></div>`;
   }
 
   function bindInlineControls(root) {
@@ -2857,7 +2935,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       const q = input.value.trim();
       if (!q) {
         if (!state.id && !state.ids.length) listSearch('');
-        else showToast('请输入 ID 或关键词', 'err');
+        else showToast(t('请输入 ID 或关键词'), 'err');
         return;
       }
       if (!INLINE_ID_RE.test(q)) { listSearch(q); return; }
@@ -2878,7 +2956,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         if (err.status !== 404 && err.data?.ok !== false) { showToast(err.message, 'err'); return; }
       } finally { submit.disabled = false; }
       listSearch(q);
-      showToast('未找到精确 ID，已按关键词搜索列表');
+      showToast(t('未找到精确 ID，已按关键词搜索列表'));
     };
     input.onkeydown = (event) => {
       if (event.key === 'Enter') { event.preventDefault(); if (!submit.disabled) void submit.onclick(); }
@@ -2888,7 +2966,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   }
 
   function inlineRows(items) {
-    return `<div class="inline-list">${items.length ? items.map((item, index) => `<div class="inline-row-wrap"><div class="inline-row" role="button" tabindex="0" aria-expanded="false" data-index="${index}">${inlineLine(item)}</div><div class="inline-row-expand hidden">${inlinePreview(item)}<div class="inline-actions"></div></div></div>`).join('') : '<div class="empty-state">没有匹配的任务</div>'}</div>`;
+    return `<div class="inline-list">${items.length ? items.map((item, index) => `<div class="inline-row-wrap"><div class="inline-row" role="button" tabindex="0" aria-expanded="false" data-index="${index}">${inlineLine(item)}</div><div class="inline-row-expand hidden">${inlinePreview(item)}<div class="inline-actions"></div></div></div>`).join('') : `<div class="empty-state">${t('没有匹配的任务')}</div>`}</div>`;
   }
 
   function bindInlineRows(root, items) {
@@ -2898,7 +2976,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       const expand = row.nextElementSibling;
       const actions = expand.querySelector('.inline-actions');
       const open = document.createElement('button');
-      open.type = 'button'; open.className = 'btn btn-xs'; open.textContent = '打开单卡';
+      open.type = 'button'; open.className = 'btn btn-xs'; open.textContent = t('打开单卡');
       open.onclick = () => { state.inlineSource = inlineSnapshot(); state.id = item.id; state.ids = []; state.inlineExpandedDetail = false; void renderCurrentView(); };
       actions.append(open);
       inlineActions(actions, item, { fullLink: true });
@@ -2919,7 +2997,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   function renderInlineBatch(data) {
     const root = $('app-root');
     const counts = Object.entries(data.counts || {}).filter(([key, value]) => !['total', 'found'].includes(key) && typeof value === 'number' && value > 0);
-    root.innerHTML = `<div class="inline-header"><strong>${esc(state.title || '本轮任务')}</strong><span class="badge chip-neutral">${esc(data.counts?.total ?? data.items.length)}</span>${counts.map(([key, value]) => `<span class="badge chip-neutral">${esc(key)} ${value}</span>`).join('')}${inlineControls()}</div>${inlineSearchBar()}${inlineRows(data.items)}${data.missing?.length ? `<div class="inline-meta">未找到: ${data.missing.map((item) => esc(item.id)).join(', ')}</div>` : ''}`;
+    root.innerHTML = `<div class="inline-header"><strong>${esc(state.title || t('本轮任务'))}</strong><span class="badge chip-neutral">${esc(data.counts?.total ?? data.items.length)}</span>${counts.map(([key, value]) => `<span class="badge chip-neutral">${esc(key)} ${value}</span>`).join('')}${inlineControls()}</div>${inlineSearchBar()}${inlineRows(data.items)}${data.missing?.length ? `<div class="inline-meta">${t('未找到')}: ${data.missing.map((item) => esc(item.id)).join(', ')}</div>` : ''}`;
     bindInlineControls(root);
     bindInlineRows(root, data.items);
   }
@@ -2928,7 +3006,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const root = $('app-root');
     const items = data.items || [];
     const statuses = ['', 'open', 'in_progress', 'blocked', 'closed'];
-    root.innerHTML = `<div class="inline-header"><strong>任务列表</strong><span class="badge chip-neutral">${esc(data.total ?? data.counts?.total ?? items.length)}</span>${inlineControls()}</div>${inlineSearchBar()}<div class="inline-filters">${statuses.map((status) => `<button type="button" class="btn btn-xs ${state.listStatusFilter === status ? 'active' : ''}" data-inline-status="${status}">${status || '全部'}</button>`).join('')}${state.listQuery ? `<button type="button" class="btn btn-xs inline-clear-query">${esc(state.listQuery)} ×</button>` : ''}</div>${inlineRows(items)}`;
+    root.innerHTML = `<div class="inline-header"><strong>${t('任务列表')}</strong><span class="badge chip-neutral">${esc(data.total ?? data.counts?.total ?? items.length)}</span>${inlineControls()}</div>${inlineSearchBar()}<div class="inline-filters">${statuses.map((status) => `<button type="button" class="btn btn-xs ${state.listStatusFilter === status ? 'active' : ''}" data-inline-status="${status}">${status || t('全部')}</button>`).join('')}${state.listQuery ? `<button type="button" class="btn btn-xs inline-clear-query">${esc(state.listQuery)} ×</button>` : ''}</div>${inlineRows(items)}`;
     bindInlineControls(root);
     bindInlineRows(root, items);
     for (const button of root.querySelectorAll('[data-inline-status]')) button.onclick = () => { state.listStatusFilter = button.dataset.inlineStatus; void loadListView(); };
@@ -2938,32 +3016,32 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   function renderBatchCard(item) {
     const b = item.bead;
     const td = item.taskDetail;
-    const t = td?.task || item.relatedTasks?.[0] || null;
+    const task = td?.task || item.relatedTasks?.[0] || null;
     const beadId = b?.id || '';
-    const taskId = t?.id || '';
+    const taskId = task?.id || '';
     const idBadgesHtml = renderCardIdBadges({ beadId, taskId, fallbackId: item.id });
-    const title = b?.title || t?.title || '(无标题)';
-    const status = b?.status || t?.status || 'unknown';
+    const title = b?.title || task?.title || t('(无标题)');
+    const status = b?.status || task?.status || 'unknown';
     const labels = Array.isArray(b?.labels) ? b.labels : [];
     const steps = Array.isArray(td?.steps) ? td.steps : [];
     const curStep = steps.find((s) => ['running', 'waiting_approval', 'needs_human', 'failed'].includes(s.status)) || steps[steps.length - 1] || null;
-    const stepsDone = steps.length ? steps.filter((s) => s.status === 'done').length : (t?.steps_done ?? 0);
-    const stepsTotal = steps.length || (t?.steps_total ?? 0);
-    const ts = b?.updated_at || t?.updated_at || b?.created_at || t?.created_at || '';
+    const stepsDone = steps.length ? steps.filter((s) => s.status === 'done').length : (task?.steps_done ?? 0);
+    const stepsTotal = steps.length || (task?.steps_total ?? 0);
+    const ts = b?.updated_at || task?.updated_at || b?.created_at || task?.created_at || '';
 
-    const modelVal = ext.resolveDispatchModelLabel?.(b, t, steps, item.dispatchModel?.label || '') || '';
+    const modelVal = ext.resolveDispatchModelLabel?.(b, task, steps, item.dispatchModel?.label || '') || '';
     const chipsHtml = buildCardChips(labels, {
       projectInfo: item.project,
-      formula: t?.formula_name || '',
-      env: t?.resolved_env || '',
+      formula: task?.formula_name || '',
+      env: task?.resolved_env || '',
       model: modelVal,
-      taskStatus: t?.status || '',
+      taskStatus: task?.status || '',
       beadStatus: b?.status || '',
     });
 
     return `
       <div class="task-card" role="button" tabindex="0" data-open-id="${esc(item.id)}">
-        ${visitedIds.has(item.id) ? '<span class="visited-badge">已看</span>' : ''}
+        ${visitedIds.has(item.id) ? `<span class="visited-badge">${t('已看')}</span>` : ''}
         <div class="task-card-top">
           <div class="meta-row">
             ${b?.ephemeral ? '<span class="chip lbl-ephemeral">ephemeral</span>' : ''}
@@ -2973,7 +3051,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
           </div>
           <div class="meta-row">
             ${renderStatusBadge(status)}
-            ${t && b && t.status !== b.status ? renderStatusBadge(t.status, `task:${t.status}`) : ''}
+            ${task && b && task.status !== b.status ? renderStatusBadge(task.status, `task:${task.status}`) : ''}
             ${ts ? `<span class="task-card-time">${esc(formatShortTime(ts))}</span>` : ''}
           </div>
         </div>
@@ -2989,7 +3067,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const seq = ++viewRequestSeq;
     const ids = [...state.ids];
     const requestQuery = buildScopeQuery({ ids: ids.join(','), force: force ? 1 : '' });
-    renderHeader(state.title || `本轮任务列表 (${state.ids.length})`, null);
+    renderHeader(state.title || `${t('本轮任务列表')} (${state.ids.length})`, null);
     const root = $('app-root');
     clearFindStateForLoading();
     root.innerHTML = `<div class="card-list">${ids.map((id) => `<div class="task-card is-skeleton"><span class="id-badge">${esc(id)}</span><div class="skeleton-line"></div><div class="skeleton-line"></div></div>`).join('')}</div>`;
@@ -2999,7 +3077,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       const data = await requestJson(`/api/batch?${requestQuery}`);
       if (seq !== viewRequestSeq) return;
       applyProjectsMeta(data);
-      renderHeader(state.title || `本轮任务列表 (${data.counts?.found || 0}/${data.counts?.total || state.ids.length})`, data.primaryProject);
+      renderHeader(state.title || `${t('本轮任务列表')} (${data.counts?.found || 0}/${data.counts?.total || state.ids.length})`, data.primaryProject);
 
       data.items.forEach((item) => cacheItem(item));
       if (state.mcpInline) {
@@ -3017,7 +3095,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         visibleSource = 'batch';
         const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'closed'];
         const filterTabs = [
-          `<button type="button" class="segment-tab ${state.batchStatusFilter === '' ? 'active' : ''}" data-batch-st="">全部 <span class="seg-count">${data.items.length}</span></button>`,
+          `<button type="button" class="segment-tab ${state.batchStatusFilter === '' ? 'active' : ''}" data-batch-st="">${t('全部')} <span class="seg-count">${data.items.length}</span></button>`,
           ...statuses
             .filter((s) => (data.counts?.[s] || 0) > 0)
             .map((s) => `<button type="button" class="segment-tab ${state.batchStatusFilter === s ? 'active' : ''}" data-batch-st="${s}">${s} <span class="seg-count">${data.counts[s]}</span></button>`),
@@ -3026,9 +3104,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         const missingHtml = data.missing?.length
           ? `
             <div class="section-block">
-              <div class="section-head"><span class="section-title">未找到的 ID (${data.missing.length})</span></div>
+              <div class="section-head"><span class="section-title">${t('未找到的 ID')} (${data.missing.length})</span></div>
               <div class="panel-box panel-box-tight">
-                <div class="meta-row">${data.missing.map((m) => `<button type="button" class="badge st-failed mono chip-btn" data-copy="${esc(m.id)}" title="${esc(m.error)}（点击复制）">${esc(m.id)} ⎘</button>`).join('')}</div>
+                <div class="meta-row">${data.missing.map((m) => `<button type="button" class="badge st-failed mono chip-btn" data-copy="${esc(m.id)}" title="${esc(m.error)} ${t('（点击复制）')}">${esc(m.id)} ⎘</button>`).join('')}</div>
               </div>
             </div>
           `
@@ -3037,9 +3115,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         root.innerHTML = `
           <div class="toolbar">
             <div class="segment-tabs" role="tablist">${filterTabs}</div>
-            ${items.length ? '<button type="button" class="btn btn-xs" id="btn-review-list">逐条查看 ▶</button>' : ''}
+            ${items.length ? `<button type="button" class="btn btn-xs" id="btn-review-list">${t('逐条查看 ▶')}</button>` : ''}
           </div>
-          ${items.length ? `<div class="card-list">${items.map(renderBatchCard).join('')}</div>` : '<div class="empty-state">当前筛选条件下无匹配任务</div>'}
+          ${items.length ? `<div class="card-list">${items.map(renderBatchCard).join('')}</div>` : `<div class="empty-state">${t('当前筛选条件下无匹配任务')}</div>`}
           ${missingHtml}
         `;
 
@@ -3060,7 +3138,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       if (seq !== viewRequestSeq) return;
       applyProjectsMeta(err?.data);
       clearFindStateForLoading();
-      root.innerHTML = `<div class="empty-state is-error">批量加载失败: ${esc(err.message)}</div>`;
+      root.innerHTML = `<div class="empty-state is-error">${t('批量加载失败')}: ${esc(err.message)}</div>`;
     } finally {
       if (seq === viewRequestSeq) setRefreshing(false);
     }
@@ -3087,7 +3165,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
 
     return `
       <div class="task-card" role="button" tabindex="0" data-open-id="${esc(it.id)}">
-        ${visitedIds.has(it.id) ? '<span class="visited-badge">已看</span>' : ''}
+        ${visitedIds.has(it.id) ? `<span class="visited-badge">${t('已看')}</span>` : ''}
         <div class="task-card-top">
           <div class="meta-row">
             ${renderPriorityBadge(it.priority)}
@@ -3112,7 +3190,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     if (state.mcpInline) {
       const seq = ++viewRequestSeq;
       const root = $('app-root');
-      root.innerHTML = '<div class="empty-state">加载中…</div>';
+      root.innerHTML = `<div class="empty-state">${t('加载中…')}</div>`;
       setRefreshing(true);
       try {
         const data = await requestJson(`/api/list?${buildScopeQuery({ status: state.listStatusFilter, q: state.listQuery, limit: 40, force: force ? 1 : '' })}`);
@@ -3122,16 +3200,16 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       } catch (err) {
         if (seq !== viewRequestSeq) return;
         applyProjectsMeta(err?.data);
-        root.innerHTML = `<div class="empty-state is-error">列表加载失败: ${esc(err.message)}</div>`;
+        root.innerHTML = `<div class="empty-state is-error">${t('列表加载失败')}: ${esc(err.message)}</div>`;
       } finally { if (seq === viewRequestSeq) setRefreshing(false); }
       return;
     }
     if (findState.open && !normalizeFindQuery(findState.query)) closeFindBar({ restoreFocus: false });
     ++viewRequestSeq;
-    renderHeader('项目任务总览', null);
+    renderHeader(t('项目任务总览'), null);
     const root = $('app-root');
     const statuses = [
-      { value: '', label: '全部' },
+      { value: '', label: t('全部') },
       { value: 'open', label: 'open' },
       { value: 'in_progress', label: 'in_progress' },
       { value: 'blocked', label: 'blocked' },
@@ -3147,23 +3225,23 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
               <circle cx="7" cy="7" r="4.5"></circle>
               <path d="M10.5 10.5L14 14"></path>
             </svg>
-            <input id="search-input" class="search-input" type="search" placeholder="搜索 ID / 标题 / 标签…" value="${esc(state.listQuery)}" />
-            <button id="btn-clear-search" class="search-clear ${state.listQuery ? '' : 'hidden'}" type="button" title="清除搜索">
+            <input id="search-input" class="search-input" type="search" placeholder="${t('搜索 ID / 标题 / 标签…')}" value="${esc(state.listQuery)}" />
+            <button id="btn-clear-search" class="search-clear ${state.listQuery ? '' : 'hidden'}" type="button" title="${t('清除搜索')}">
               <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                 <path d="M4 4l8 8M12 4l-8 8"></path>
               </svg>
             </button>
           </div>
-          <button id="btn-search" class="btn" type="button">搜索</button>
+          <button id="btn-search" class="btn" type="button">${t('搜索')}</button>
         </div>
         <div class="toolbar">
-          <button type="button" class="btn btn-xs hidden" id="btn-review-list">逐条查看 ▶</button>
+          <button type="button" class="btn btn-xs hidden" id="btn-review-list">${t('逐条查看 ▶')}</button>
           <div id="status-tabs" class="segment-tabs" role="tablist">
             ${statuses.map((s) => `<button type="button" class="segment-tab ${state.listStatusFilter === s.value ? 'active' : ''}" data-list-st="${s.value}">${s.label}</button>`).join('')}
           </div>
         </div>
       </div>
-      <div id="list-container"><div class="empty-state">加载中…</div></div>
+      <div id="list-container"><div class="empty-state">${t('加载中…')}</div></div>
     `;
 
     const fetchAndRender = async (forceRefresh = false) => {
@@ -3171,13 +3249,13 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       const requestQuery = buildScopeQuery({ status: state.listStatusFilter, q: state.listQuery, limit: 40, force: forceRefresh ? 1 : '' });
       const container = $('list-container');
       clearFindStateForLoading();
-      container.innerHTML = '<div class="empty-state">加载中…</div>';
+      container.innerHTML = `<div class="empty-state">${t('加载中…')}</div>`;
       setRefreshing(true);
       try {
         const data = await requestJson(`/api/list?${requestQuery}`);
         if (seq !== viewRequestSeq) return;
         applyProjectsMeta(data);
-        renderHeader('项目任务总览', data.project);
+        renderHeader(t('项目任务总览'), data.project);
         visibleItems = data.items || [];
         visibleSource = 'list';
         visibleItems.forEach(rememberItem);
@@ -3185,7 +3263,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         $('btn-review-list').onclick = () => openFromList('');
         if (!data.items?.length) {
           clearFindStateForLoading();
-          container.innerHTML = `<div class="empty-state">${esc(window.__tasksUiConfig?.emptyTasksText || '暂无匹配的 Beads 任务')}</div>`;
+          container.innerHTML = `<div class="empty-state">${esc(window.__tasksUiConfig?.emptyTasksText || t('暂无匹配的 Beads 任务'))}</div>`;
           return;
         }
         container.innerHTML = `<div class="card-list">${data.items.map(renderListCard).join('')}</div>`;
@@ -3196,7 +3274,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         if (seq !== viewRequestSeq) return;
         applyProjectsMeta(err?.data);
         clearFindStateForLoading();
-        container.innerHTML = `<div class="empty-state is-error">列表加载失败: ${esc(err.message)}</div>`;
+        container.innerHTML = `<div class="empty-state is-error">${t('列表加载失败')}: ${esc(err.message)}</div>`;
       } finally {
         if (seq === viewRequestSeq) setRefreshing(false);
       }
@@ -3299,9 +3377,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     // 12px linear paper-plane icon, inherits the button text color.
     const sendIcon = '<svg class="btn-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>';
 
-    const sendBtn = makeButton('发到当前对话', 'btn btn-agent-primary');
+    const sendBtn = makeButton(t('发到当前对话'), 'btn btn-agent-primary');
     sendBtn.insertAdjacentHTML('afterbegin', sendIcon);
-    const noteBtn = makeButton('带说明发送', 'btn btn-agent-secondary');
+    const noteBtn = makeButton(t('带说明发送'), 'btn btn-agent-secondary');
     bar.append(sendBtn, noteBtn);
 
     const box = document.createElement('div');
@@ -3309,9 +3387,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'input agent-send-input';
-    input.placeholder = '补充说明 / 驳回意见…';
-    const noteSend = makeButton('发送', 'btn btn-primary btn-xs');
-    const noteCancel = makeButton('取消', 'btn btn-ghost btn-xs');
+    input.placeholder = t('补充说明 / 驳回意见…');
+    const noteSend = makeButton(t('发送'), 'btn btn-primary btn-xs');
+    const noteCancel = makeButton(t('取消'), 'btn btn-ghost btn-xs');
     box.append(input, noteSend, noteCancel);
     bar.append(box);
 
@@ -3336,7 +3414,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       setBusy(true);
       try {
         await postJson('/api/agent/send', { prompt });
-        showToast('已发送到当前对话');
+        showToast(t('已发送到当前对话'));
         return true;
       } catch (err) {
         showToast(err.message, 'err');
@@ -3346,7 +3424,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       }
     };
 
-    sendBtn.onclick = () => { void send(`请继续处理以下任务：\n${summary}`); };
+    sendBtn.onclick = () => { void send(`${t('请继续处理以下任务：')}\n${summary}`); };
     noteBtn.onclick = () => {
       if (box.classList.contains('hidden')) openBox();
       else closeBox();
@@ -3354,7 +3432,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const sendWithNote = async () => {
       const note = input.value.trim();
       if (!note) {
-        showToast('请先输入说明内容，或直接用「发到当前对话」', 'err');
+        showToast(t('请先输入说明内容，或直接用「发到当前对话」'), 'err');
         input.focus();
         return;
       }
@@ -3386,31 +3464,31 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const b = data.bead;
     const td = data.taskDetail;
     const actionCacheKey = cacheKey(data.id);
-    const t = td?.task || null;
+    const task = td?.task || null;
     const root = $('app-root');
     const steps = Array.isArray(td?.steps) ? td.steps : [];
     const events = Array.isArray(td?.events) ? td.events : [];
     const related = Array.isArray(data.relatedTasks) ? data.relatedTasks : [];
 
-    const headId = b?.id || t?.id || data.id;
+    const headId = b?.id || task?.id || data.id;
     renderHeader(headId, data.project);
 
     const labels = Array.isArray(b?.labels) ? b.labels : [];
     const deps = Array.isArray(b?.dependencies) ? b.dependencies : [];
     const dependents = Array.isArray(b?.dependents) ? b.dependents : [];
-    const titleText = b?.title || t?.title || headId;
-    const metaRows = buildMetaRows(b, td, t, steps, data.project, data.dispatchModel?.label || '');
+    const titleText = b?.title || task?.title || headId;
+    const metaRows = buildMetaRows(b, td, task, steps, data.project, data.dispatchModel?.label || '');
     const latestReply = extractLatestReply(td, steps);
     const structuredSummary = extractStructuredSummary(data, td, steps);
     const displayNotes = b?.notes ? formatBeadNotesForDisplay(b.notes) : '';
-    const notesHasStructuredSummary = String(b?.notes || '').includes('**处理简介**');
+    const notesHasStructuredSummary = String(b?.notes || '').includes('**\u5904\u7406\u7b80\u4ecb**');
 
     // Header quick actions
     const quickActions = ext.renderDetailActions?.(data, { esc }) || [];
     if (b && b.status !== 'closed') {
-      quickActions.push(`<button type="button" class="btn btn-bead-close" id="btn-quick-close">${BEAD_CLOSE_ICON}Close Bead</button>`);
+      quickActions.push(`<button type="button" class="btn btn-bead-close" id="btn-quick-close">${BEAD_CLOSE_ICON}${t('Close Bead')}</button>`);
     } else if (b && b.status === 'closed') {
-      quickActions.push(`<button type="button" class="btn btn-bead-reopen" id="btn-quick-reopen">${BEAD_REOPEN_ICON}Reopen Bead</button>`);
+      quickActions.push(`<button type="button" class="btn btn-bead-reopen" id="btn-quick-reopen">${BEAD_REOPEN_ICON}${t('Reopen Bead')}</button>`);
     }
 
     const blocks = [];
@@ -3420,28 +3498,28 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       <section class="detail-header">
         <div class="detail-header-top">
           <div class="meta-row">
-            ${b ? `<button type="button" class="id-badge" data-copy="${esc(b.id)}" title="点击复制 Bead ID">${esc(b.id)} ⎘</button>` : ''}
-            ${t ? `<button type="button" class="id-badge-task" data-copy="${esc(t.id)}" title="点击复制 Task ID">#${esc(t.id)} ⎘</button>` : ''}
+            ${b ? `<button type="button" class="id-badge" data-copy="${esc(b.id)}" title="${t('点击复制 Bead ID')}">${esc(b.id)} ⎘</button>` : ''}
+            ${task ? `<button type="button" class="id-badge-task" data-copy="${esc(task.id)}" title="${t('点击复制 Task ID')}">#${esc(task.id)} ⎘</button>` : ''}
             ${renderProjectBadge(data.project)}
             ${b ? renderPriorityBadge(b.priority) : ''}
             ${b?.ephemeral ? '<span class="chip lbl-ephemeral">ephemeral</span>' : ''}
             ${b ? renderStatusBadge(b.status) : ''}
-            ${t ? renderStatusBadge(t.status, b ? `task:${t.status}` : t.status) : ''}
+            ${task ? renderStatusBadge(task.status, b ? `task:${task.status}` : task.status) : ''}
             ${b?.issue_type ? `<span class="chip chip-neutral">${esc(b.issue_type)}</span>` : ''}
           </div>
         </div>
         <h2 class="detail-title">${esc(titleText)}</h2>
-        ${t?.bead_id && !b ? `<div class="meta-row"><button type="button" class="id-badge" data-jump-id="${esc(t.bead_id)}">bead: ${esc(t.bead_id)}</button></div>` : ''}
+        ${task?.bead_id && !b ? `<div class="meta-row"><button type="button" class="id-badge" data-jump-id="${esc(task.bead_id)}">bead: ${esc(task.bead_id)}</button></div>` : ''}
         ${b ? `
           <div class="meta-row">
             ${labels.map((l) => `
               <span class="chip ${labelClass(l)}">#${esc(l)}
-                <button type="button" class="chip-remove" data-remove-label="${esc(l)}" title="移除标签">×</button>
+                <button type="button" class="chip-remove" data-remove-label="${esc(l)}" title="${t('移除标签')}">×</button>
               </span>
             `).join('')}
             <div class="control-inline">
-              <input id="new-label-input" class="input" type="text" placeholder="新增标签…" style="width:112px;height:22px;font-size:11px;" />
-              <button id="btn-add-label" class="btn btn-xs" type="button">+ 标签</button>
+              <input id="new-label-input" class="input" type="text" placeholder="${t('新增标签…')}" style="width:112px;height:22px;font-size:11px;" />
+              <button id="btn-add-label" class="btn btn-xs" type="button">${t('+ 标签')}</button>
             </div>
           </div>
         ` : ''}
@@ -3456,10 +3534,10 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
           <div class="panel-box panel-box-tight">
             <div class="meta-grid">
               ${metaRows.map((row) => `
-                <div class="meta-key">${esc(row.k)}</div>
+                <div class="meta-key">${esc(t(row.k))}</div>
                 <div class="meta-val">
                   ${row.copyable
-                    ? `<div class="meta-val-row"><span>${esc(row.v)}</span><button type="button" class="btn btn-xs" data-copy="${esc(row.v)}">Copy</button></div>`
+                    ? `<div class="meta-val-row"><span>${esc(row.v)}</span><button type="button" class="btn btn-xs" data-copy="${esc(row.v)}">${t('Copy')}</button></div>`
                     : esc(row.v)}
                 </div>
               `).join('')}
@@ -3474,8 +3552,8 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">处理简介 / Summary</span>
-            <button type="button" class="btn btn-xs" data-copy="${esc(structuredSummary)}">Copy</button>
+            <span class="section-title">${t('Summary')}</span>
+            <button type="button" class="btn btn-xs" data-copy="${esc(structuredSummary)}">${t('Copy')}</button>
           </div>
           <div class="panel-box md-body summary-box">${renderMarkdown(structuredSummary)}</div>
         </section>
@@ -3487,7 +3565,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">Description</span>
+            <span class="section-title">${t('Description')}</span>
           </div>
           <div class="panel-box md-body">${renderMarkdown(b.description)}</div>
         </section>
@@ -3499,7 +3577,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">Acceptance Criteria</span>
+            <span class="section-title">${t('Acceptance Criteria')}</span>
           </div>
           <div class="panel-box md-body">${renderMarkdown(b.acceptance_criteria)}</div>
         </section>
@@ -3511,11 +3589,11 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">Relations</span>
+            <span class="section-title">${t('Relations')}</span>
           </div>
           <div class="panel-box panel-box-tight">
             <div class="meta-row">
-              ${b.parent ? `<button type="button" class="chip chip-neutral chip-btn mono" data-jump-id="${esc(b.parent)}">parent: ${esc(b.parent)}</button>` : ''}
+              ${b.parent ? `<button type="button" class="chip chip-neutral chip-btn mono" data-jump-id="${esc(b.parent)}">${t('Parent')}: ${esc(b.parent)}</button>` : ''}
               ${deps.map((d) => {
                 const depId = d.id || d.depends_on_id;
                 if (!depId || depId === b.parent) return '';
@@ -3524,7 +3602,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
               ${dependents.map((d) => {
                 const depId = d.id || d.issue_id;
                 if (!depId) return '';
-                return `<button type="button" class="chip chip-neutral chip-btn mono" data-jump-id="${esc(depId)}">${d.status ? '<span class="status-dot"></span>' : ''}child: ${esc(depId)}${d.status ? ` [${esc(d.status)}]` : ''}</button>`;
+                return `<button type="button" class="chip chip-neutral chip-btn mono" data-jump-id="${esc(depId)}">${d.status ? '<span class="status-dot"></span>' : ''}${t('Child')}: ${esc(depId)}${d.status ? ` [${esc(d.status)}]` : ''}</button>`;
               }).join('')}
             </div>
           </div>
@@ -3539,8 +3617,8 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">Latest Reply</span>
-            <button type="button" class="btn btn-xs" data-copy="${esc(latestReply)}">Copy</button>
+            <span class="section-title">${t('Latest Reply')}</span>
+            <button type="button" class="btn btn-xs" data-copy="${esc(latestReply)}">${t('Copy')}</button>
           </div>
           <div class="panel-box md-body">${renderMarkdown(latestReply)}</div>
         </section>
@@ -3552,9 +3630,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">Notes</span>
+            <span class="section-title">${t('Notes')}</span>
           </div>
-          ${b.close_reason ? `<div class="close-reason-banner">Close reason: ${esc(b.close_reason)}</div>` : ''}
+          ${b.close_reason ? `<div class="close-reason-banner">${t('Close reason')}: ${esc(b.close_reason)}</div>` : ''}
           ${displayNotes ? `<div class="panel-box md-body">${renderMarkdown(displayNotes)}</div>` : ''}
         </section>
       `);
@@ -3565,39 +3643,39 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       blocks.push(`
         <section class="section-block">
           <div class="section-head">
-            <span class="section-title">状态与备注</span>
+            <span class="section-title">${t('状态与备注')}</span>
           </div>
           <div class="panel-box" style="display:flex;flex-direction:column;gap:10px;">
             <div class="controls-grid">
               <div class="control-group">
-                <label class="control-label" for="bead-status-select">状态更新</label>
+                <label class="control-label" for="bead-status-select">${t('状态更新')}</label>
                 <div class="control-inline">
                   <select id="bead-status-select" class="select">
                     ${['open', 'in_progress', 'blocked', 'deferred', 'closed'].map((s) => `<option value="${s}" ${b.status === s ? 'selected' : ''}>${s}</option>`).join('')}
                   </select>
-                  <button id="btn-save-status" class="btn btn-primary" type="button">更新</button>
+                  <button id="btn-save-status" class="btn btn-primary" type="button">${t('更新')}</button>
                 </div>
               </div>
               <div class="control-group">
-                <label class="control-label" for="bead-priority-select">优先级</label>
+                <label class="control-label" for="bead-priority-select">${t('优先级')}</label>
                 <div class="control-inline">
                   <select id="bead-priority-select" class="select">
                     ${[0, 1, 2, 3, 4].map((p) => `<option value="${p}" ${Number(b.priority) === p ? 'selected' : ''}>P${p}</option>`).join('')}
                   </select>
-                  <button id="btn-save-priority" class="btn" type="button">应用</button>
+                  <button id="btn-save-priority" class="btn" type="button">${t('应用')}</button>
                 </div>
               </div>
             </div>
 
             <div id="status-reason-row" class="control-group hidden">
-              <input id="status-reason-input" class="input" type="text" placeholder="可选：关闭或重开原因 (--reason)…" />
+              <input id="status-reason-input" class="input" type="text" placeholder="${t('可选：关闭或重开原因 (--reason)…')}" />
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="note-input">追加备注 (bd note / --append-notes)</label>
-              <textarea id="note-input" class="textarea" placeholder="输入备注内容…"></textarea>
+              <label class="control-label" for="note-input">${t('追加备注 (bd note / --append-notes)')}</label>
+              <textarea id="note-input" class="textarea" placeholder="${t('输入备注内容…')}"></textarea>
               <div>
-                <button id="btn-append-note" class="btn btn-primary" type="button">追加 Note</button>
+                <button id="btn-append-note" class="btn btn-primary" type="button">${t('追加 Note')}</button>
               </div>
             </div>
           </div>
@@ -3608,20 +3686,20 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     if (queue.ids.includes(state.id)) {
       const { prev, next } = queueNeighbors(state.id, queue);
       const preview = (id) => `<span class="queue-preview-id">${esc(id)}</span>`;
-      blocks.push(`<section class="detail-queue-footer"><button type="button" class="btn queue-footer-btn" id="footer-prev" ${prev ? '' : 'disabled'}><span class="queue-preview-label">← 上一条</span>${prev ? preview(prev) : ''}</button><button type="button" class="btn btn-primary queue-footer-btn" id="footer-next"><span class="queue-preview-label">${next ? '下一条 →' : '已到队尾 · 返回列表'}</span>${next ? preview(next) : ''}</button></section>`);
+      blocks.push(`<section class="detail-queue-footer"><button type="button" class="btn queue-footer-btn" id="footer-prev" ${prev ? '' : 'disabled'}><span class="queue-preview-label">← ${t('上一条')}</span>${prev ? preview(prev) : ''}</button><button type="button" class="btn btn-primary queue-footer-btn" id="footer-next"><span class="queue-preview-label">${next ? `${t('下一条')} →` : t('已到队尾 · 返回列表')}</span>${next ? preview(next) : ''}</button></section>`);
     }
     root.innerHTML = blocks.join('');
     if (bridge && state.mcpInline && state.inlineExpandedDetail) {
       const bar = document.createElement('div');
       bar.className = 'inline-actions';
       const collapse = document.createElement('button');
-      collapse.type = 'button'; collapse.className = 'btn btn-xs'; collapse.textContent = '← 收起为简介';
+      collapse.type = 'button'; collapse.className = 'btn btn-xs'; collapse.textContent = `← ${t('收起为简介')}`;
       collapse.onclick = () => { state.inlineExpandedDetail = false; renderInlineCard(data); };
       bar.append(collapse);
       const source = state.inlineSource || (['batch', 'list'].includes(state.inlineOrigin?.view) ? state.inlineOrigin : null);
       if (source) {
         const back = document.createElement('button');
-        back.type = 'button'; back.className = 'btn btn-xs'; back.textContent = source.view === 'batch' ? '← 返回批处理' : '← 返回列表';
+        back.type = 'button'; back.className = 'btn btn-xs'; back.textContent = `← ${source.view === 'batch' ? t('返回批处理') : t('返回列表')}`;
         back.onclick = () => restoreInlineView(source);
         bar.append(back);
       }
@@ -3632,9 +3710,9 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       const bar = document.createElement('div');
       bar.className = 'toolbar';
       const summary = buildTaskContextSummary(data);
-      const add = (label, action) => { const button = document.createElement('button'); button.className = 'btn'; button.textContent = label; button.onclick = async () => { try { const result = await action(); showToast(result?.conversationId ? `已新开后台会话 (${result.conversationId})` : '操作成功'); } catch (err) { showToast(err.message, 'err'); } }; bar.append(button); };
-      if (caps.updateModelContext) { add('附到对话', () => bridge.updateModelContext(summary)); add('清除上下文', () => bridge.clearModelContext()); }
-      if (caps.message) { add('发到当前对话', () => bridge.sendMessage(`请继续处理任务：\n${summary}`)); add('新开会话处理', () => bridge.sendMessage(`请继续处理任务：\n${summary}`, { newConversation: true })); }
+      const add = (label, action) => { const button = document.createElement('button'); button.className = 'btn'; button.textContent = label; button.onclick = async () => { try { const result = await action(); showToast(result?.conversationId ? t('已新开后台会话 ({id})', { id: result.conversationId }) : t('操作成功')); } catch (err) { showToast(err.message, 'err'); } }; bar.append(button); };
+      if (caps.updateModelContext) { add(t('附到对话'), () => bridge.updateModelContext(summary)); add(t('清除上下文'), () => bridge.clearModelContext()); }
+      if (caps.message) { add(t('发到当前对话'), () => bridge.sendMessage(`${t('请继续处理任务：')}\n${summary}`)); add(t('新开会话处理'), () => bridge.sendMessage(`${t('请继续处理任务：')}\n${summary}`, { newConversation: true })); }
       ext.collectInlineActions?.(data, { inlineParts, bridge, fullLink: false, add });
       bar.classList.add('detail-host-bar');
       if (bar.childNodes.length) {
@@ -3697,10 +3775,10 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
             currentStatus: b.status,
             reason: $('status-reason-input')?.value.trim() || '',
           });
-          showToast(`状态已更新为 ${targetStatus}`);
+          showToast(t('状态已更新为 {status}', { status: targetStatus }));
           applyActionItem(res.item);
         } catch (err) {
-          showToast(`状态更新失败: ${err.message}`, 'err');
+          showToast(t('状态更新失败: {error}', { error: err.message }), 'err');
         } finally {
           if (triggerBtn && triggerBtn.isConnected) triggerBtn.disabled = false;
         }
@@ -3722,10 +3800,10 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
           $('btn-save-priority').disabled = true;
           const prio = Number($('bead-priority-select').value);
           const res = await postJson('/api/bead/priority', { id: b.id, priority: prio });
-          showToast(`优先级已更新为 P${prio}`);
+          showToast(t('优先级已更新为 P{priority}', { priority: prio }));
           applyActionItem(res.item);
         } catch (err) {
-          showToast(`优先级更新失败: ${err.message}`, 'err');
+          showToast(t('优先级更新失败: {error}', { error: err.message }), 'err');
         } finally {
           if ($('btn-save-priority')) $('btn-save-priority').disabled = false;
         }
@@ -3734,16 +3812,16 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       $('btn-append-note').onclick = async () => {
         const text = $('note-input').value.trim();
         if (!text) {
-          showToast('备注内容不能为空', 'err');
+          showToast(t('备注内容不能为空'), 'err');
           return;
         }
         try {
           $('btn-append-note').disabled = true;
           const res = await postJson('/api/bead/note', { id: b.id, text });
-          showToast('已追加备注');
+          showToast(t('已追加备注'));
           applyActionItem(res.item);
         } catch (err) {
-          showToast(`追加备注失败: ${err.message}`, 'err');
+          showToast(t('追加备注失败: {error}', { error: err.message }), 'err');
         } finally {
           if ($('btn-append-note')) $('btn-append-note').disabled = false;
         }
@@ -3755,10 +3833,10 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         try {
           $('btn-add-label').disabled = true;
           const res = await postJson('/api/bead/label', { id: b.id, op: 'add', label });
-          showToast(`已添加标签 #${label}`);
+          showToast(t('已添加标签 #{label}', { label }));
           applyActionItem(res.item);
         } catch (err) {
-          showToast(`添加标签失败: ${err.message}`, 'err');
+          showToast(t('添加标签失败: {error}', { error: err.message }), 'err');
         } finally {
           if ($('btn-add-label')) $('btn-add-label').disabled = false;
         }
@@ -3773,10 +3851,10 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
           const label = btn.getAttribute('data-remove-label');
           try {
             const res = await postJson('/api/bead/label', { id: b.id, op: 'remove', label });
-            showToast(`已移除标签 #${label}`);
+            showToast(t('已移除标签 #{label}', { label }));
             applyActionItem(res.item);
           } catch (err) {
-            showToast(`移除标签失败: ${err.message}`, 'err');
+            showToast(t('移除标签失败: {error}', { error: err.message }), 'err');
           }
         };
       }
@@ -3852,7 +3930,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       } else {
         const displayIdx = findState.activeIndex >= 0 ? findState.activeIndex + 1 : 1;
         const suffix = findState.truncated ? '+' : '';
-        const cardNote = findState.filterCards && hasCards ? ` · ${matchedCardCount}项` : '';
+        const cardNote = findState.filterCards && hasCards ? ` · ${t('{count}项', { count: matchedCardCount })}` : '';
         countEl.textContent = `${displayIdx} / ${total}${suffix}${cardNote}`;
         countEl.classList.remove('is-empty');
       }
@@ -3970,7 +4048,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
         if (cardList && cardList.parentNode) {
           const banner = document.createElement('div');
           banner.className = 'empty-state find-empty-banner';
-          banner.textContent = `当前页内无匹配 “${query}” 的任务`;
+          banner.textContent = t('当前页内无匹配 “{query}” 的任务', { query });
           cardList.insertAdjacentElement('afterend', banner);
         }
       }
@@ -4073,7 +4151,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     else {
       renderHeader(id, null);
       clearFindStateForLoading();
-      root.innerHTML = `<div class="empty-state">正在读取 <span class="mono">${esc(id)}</span>…</div>`;
+      root.innerHTML = `<div class="empty-state">${t('正在读取')} <span class="mono">${esc(id)}</span>…</div>`;
     }
     setRefreshing(true);
     try {
@@ -4099,7 +4177,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
       applyProjectsMeta(err?.data);
       if (!cached) {
         clearFindStateForLoading();
-        root.innerHTML = `<div class="empty-state is-error">读取失败 (${esc(id)}): ${esc(err.message)}</div>`;
+        root.innerHTML = `<div class="empty-state is-error">${t('读取失败')} (${esc(id)}): ${esc(err.message)}</div>`;
       }
     } finally {
       if (viewSeq === viewRequestSeq && seq === detailRequestSeq) setRefreshing(false);
@@ -4111,22 +4189,29 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     detailRequestSeq += 1;
     setRefreshing(false);
     $('batch-nav').classList.add('hidden');
-    renderHeader(`${window.__tasksUiConfig?.title || 'Beads Tasks'} 设置`, null);
+    renderHeader(`${window.__tasksUiConfig?.title || 'Beads Tasks'} ${t('设置')}`, null);
     const root = $('app-root');
-    root.innerHTML = '<div class="empty-state">加载设置中…</div>';
+    root.innerHTML = `<div class="empty-state">${t('加载设置中…')}</div>`;
     try {
       const data = await requestJson('/api/settings');
       if (seq !== viewRequestSeq || !state.settingsOpen) return;
       state.settings = data.settings;
       state.settingsPath = data.path;
+      applyLocale();
       root.innerHTML = `<div class="settings-page">
-        <div class="settings-head"><button type="button" class="btn btn-ghost settings-back">← 返回</button><h2>Beads Tasks 设置</h2></div>
-        <section class="settings-card"><h3 class="settings-group-title">聊天输出与链接</h3>
-          <div class="settings-row"><div><strong>输出时携带 Sidecar 链接</strong><p>开启时，Agent 回复中的任务 ID 会附带 [⧉] / [↗] 与底部侧栏入口链接；关闭后仅输出纯行内代码（MCP Inline 卡片不受影响），无需重启、下一轮对话即生效。</p></div>
-          <button type="button" role="switch" aria-label="输出时携带 Sidecar 链接" aria-checked="${state.settings.emitSidecarLinks}" class="toggle-switch${state.settings.emitSidecarLinks ? ' is-on' : ''}"><span></span></button></div></section>
-        <div class="settings-footer"><div class="settings-meta"><span>配置文件</span><code>${esc(state.settingsPath)}</code><button type="button" class="btn btn-ghost settings-copy">复制路径</button></div></div></div>`;
+        <div class="settings-head"><button type="button" class="btn btn-ghost settings-back">← ${t('返回')}</button><h2>Beads Tasks ${t('设置')}</h2></div>
+        <section class="settings-card"><div class="settings-row"><label for="settings-locale">${t('界面语言')}</label><select id="settings-locale" class="select"><option value="auto" ${state.settings.locale === 'auto' ? 'selected' : ''}>${t('自动')}</option><option value="en" ${state.settings.locale === 'en' ? 'selected' : ''}>English</option><option value="zh-CN" ${state.settings.locale === 'zh-CN' ? 'selected' : ''}>${t('简体中文')}</option></select></div></section>
+        <section class="settings-card"><h3 class="settings-group-title">${t('聊天输出与链接')}</h3>
+          <div class="settings-row"><div><strong>${t('输出时携带 Sidecar 链接')}</strong><p>${t('开启时，Agent 回复中的任务 ID 会附带 [⧉] / [↗] 与底部侧栏入口链接；关闭后仅输出纯行内代码（MCP Inline 卡片不受影响），无需重启、下一轮对话即生效。')}</p></div>
+          <button type="button" role="switch" aria-label="${t('输出时携带 Sidecar 链接')}" aria-checked="${state.settings.emitSidecarLinks}" class="toggle-switch${state.settings.emitSidecarLinks ? ' is-on' : ''}"><span></span></button></div></section>
+        <div class="settings-footer"><div class="settings-meta"><span>${t('配置文件')}</span><code>${esc(state.settingsPath)}</code><button type="button" class="btn btn-ghost settings-copy">${t('复制路径')}</button></div></div></div>`;
+      root.querySelector('#settings-locale').onchange = async (event) => {
+        event.target.disabled = true;
+        try { const result = await postJson('/api/settings', { locale: event.target.value }); state.settings = result.settings; state.settingsPath = result.path; applyLocale(); await renderCurrentView(); }
+        catch (err) { event.target.value = state.settings.locale; showToast(err.message, 'err'); event.target.disabled = false; }
+      };
       root.querySelector('.settings-back').onclick = () => { state.settingsOpen = false; void renderCurrentView(); };
-      root.querySelector('.settings-copy').onclick = (event) => void copyText(state.settingsPath, event.currentTarget, '已复制路径');
+      root.querySelector('.settings-copy').onclick = (event) => void copyText(state.settingsPath, event.currentTarget, t('已复制路径'));
       const toggle = root.querySelector('.toggle-switch');
       toggle.onclick = async () => {
         const previous = state.settings.emitSidecarLinks;
@@ -4138,15 +4223,15 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
           const result = await postJson('/api/settings', { emitSidecarLinks: next });
           state.settings = result.settings;
           state.settingsPath = result.path;
-          showToast(`已${next ? '开启' : '关闭'}输出 Sidecar 链接（下一轮对话生效）`);
+          showToast(next ? t('已开启输出 Sidecar 链接（下一轮对话生效）') : t('已关闭输出 Sidecar 链接（下一轮对话生效）'));
         } catch (err) {
           toggle.classList.toggle('is-on', previous);
           toggle.setAttribute('aria-checked', String(previous));
-          showToast(`设置保存失败: ${err.message}`, 'err');
+          showToast(t('设置保存失败: {error}', { error: err.message }), 'err');
         } finally { toggle.disabled = false; }
       };
     } catch (err) {
-      if (seq === viewRequestSeq && state.settingsOpen) root.innerHTML = `<div class="empty-state is-error">读取设置失败: ${esc(err.message)}</div>`;
+      if (seq === viewRequestSeq && state.settingsOpen) root.innerHTML = `<div class="empty-state is-error">${t('读取设置失败')}: ${esc(err.message)}</div>`;
     }
   }
 
@@ -4171,7 +4256,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     const target = resolveCopyTarget(params);
     if (!target) return;
     syncUrl();
-    void copyText(target, null, '已复制 ID', { preferNative: true });
+    void copyText(target, null, t('已复制 ID'), { preferNative: true });
   }
 
   async function refreshProjectsScope(seq) {
@@ -4220,7 +4305,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     bridge.onToolResult(applyPayload);
     bridge.onToolInput(() => {
       ++viewRequestSeq;
-      $('app-root').innerHTML = '<div class="empty-state">加载中…</div>';
+      $('app-root').innerHTML = `<div class="empty-state">${t('加载中…')}</div>`;
     });
     try { restoredQueue = await bridge.loadReviewQueue(); } catch { /* queue persistence is optional */ }
     const initial = bridge.getInitialPayload();
@@ -4229,6 +4314,8 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
   }
 
   async function init() {
+    applyLocale();
+    try { const data = await requestJson('/api/settings'); state.settings = data.settings; state.settingsPath = data.path; applyLocale(); } catch { /* use defaults if settings are unavailable */ }
     handlePendingCopy(initialParams);
     $('project-select').onchange = (e) => {
       state.settingsOpen = false;
@@ -4385,7 +4472,7 @@ window.__tasksReviewQueue = { queueNeighbors, shouldHandleQueueShortcut, shouldR
     console.error('[tasks] init failed:', err);
     const root = $('app-root');
     if (root) {
-      root.innerHTML = `<div class="empty-state is-error">初始化失败: ${esc(err?.message || String(err))}</div>`;
+      root.innerHTML = `<div class="empty-state is-error">${t('初始化失败')}: ${esc(err?.message || String(err))}</div>`;
     }
   });
 })();

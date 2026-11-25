@@ -102,7 +102,7 @@ test('tool metadata and descriptions', async (t) => {
 test('settings app tools persist settings through the protocol', async (t) => {
   const { tool, dir } = await fixture(t);
   const initial = (await tool('ui_get_settings')).structuredContent;
-  assert.deepEqual(initial, { ok: true, settings: { version: 1, emitSidecarLinks: true }, path: join(dir, 'settings.json') });
+  assert.deepEqual(initial, { ok: true, settings: { version: 1, emitSidecarLinks: true, locale: 'auto' }, path: join(dir, 'settings.json') });
   assert.equal((await tool('ui_update_settings', { emitSidecarLinks: false })).structuredContent.settings.emitSidecarLinks, false);
   assert.equal((await tool('ui_get_settings')).structuredContent.settings.emitSidecarLinks, false);
   assert.equal((await tool('ui_update_settings', { emitSidecarLinks: 'no' })).isError, true);

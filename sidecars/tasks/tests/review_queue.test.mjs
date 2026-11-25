@@ -24,6 +24,7 @@ test('business metadata updates the project selector and initial detail restores
   const saved = { ids: ['a', 'b'], metaById: {}, source: 'list', activeProjectId: 'p', conversationId: 'c', visitedIds: [] };
   const rendered = [];
   const context = {
+    t: (key) => key,
     state: { id: 'a', ids: [], title: '', project: '', repo: '', conversationId: 'c', activeProjectId: '', projects: [] },
     initialParams: new URLSearchParams('id=a'), initialQueuePending: true,
     queue: { ids: [] }, restoredQueue: null, restoredQueueProject: '', visitedIds: new Set(),
@@ -99,6 +100,7 @@ test('stale list, batch and detail responses cannot replace the current view', a
   const pending = [];
   const updates = [];
   const context = {
+    t: (key) => key,
     state: { id: '', ids: ['a'], project: 'p', repo: '', title: '', listStatusFilter: '', listQuery: '', batchStatusFilter: '' },
     $: node, window: { scrollY: 0, scrollTo() {} },
     requestJson: (url) => new Promise((resolve, reject) => pending.push({ url, resolve, reject })),
@@ -162,6 +164,7 @@ test('batch find opens immediately, preserves typing and stays closed when filte
   const root = { innerHTML: '', querySelectorAll: (selector) => selector === '[data-batch-st]' ? [tab] : [], querySelector: () => null };
   const input = { value: '', focus: (options) => { focusCalls.push(options.preventScroll); context.document.activeElement = input; }, select: () => { selections += 1; } };
   const context = {
+    t: (key) => key,
     state: { ids: ['a'], title: '', batchStatusFilter: '' }, findState: { open: false, query: '' },
     document: { activeElement: null }, window: { getSelection: () => ({ toString: () => 'unrelated selection' }) },
     $: (id) => id === 'app-root' ? root : id === 'find-input' ? input : null,
@@ -212,6 +215,7 @@ test('leaving batch closes an empty find bar and preserves nonempty searches', a
       };
       const calls = [];
       const context = {
+        t: (key) => key,
         state: { id: 'a', ids: [], listStatusFilter: '', listQuery: '' }, findState: { open: true, query },
         normalizeFindQuery: (value) => value.trim(), closeFindBar: (options) => { calls.push(options.restoreFocus); context.findState.open = false; },
         $: node, window: { scrollY: 0, scrollTo() {} }, viewRequestSeq: 0, detailRequestSeq: 0, lastDetailId: '',
@@ -271,6 +275,7 @@ test('implicit project changes isolate detail cache and cached data cannot disca
   let resolveDetail;
   let removed = false;
   const context = {
+    t: (key) => key,
     state: { id: 'a', ids: [], title: '', conversationId: 'c', project: '', activeProjectId: 'p', repo: '' },
     queue: saved, restoredQueue: saved, restoredQueueProject: 'q', visitedIds: new Set(),
     sessionStorage: { removeItem: () => { removed = true; } }, storageKey: 'queue',
@@ -349,7 +354,7 @@ test('detail queue footer previews ids only and keeps the compound button rule',
   assert.ok(footer, 'app.js must render the detail queue footer');
   assert.match(footer[0], /id="footer-prev"/);
   assert.match(footer[0], /id="footer-next"/);
-  assert.ok(footer[0].includes('← 上一条') && footer[0].includes('下一条 →') && footer[0].includes('已到队尾 · 返回列表'));
+  for (const key of ['上一条', '下一条', '已到队尾 · 返回列表']) assert.ok(footer[0].includes(`t('${key}')`));
   for (const [label, text] of [['styles.css', css], ['mcp/dist/app.html', dist]]) {
     const rule = text.match(/\.btn\.queue-footer-btn\s*\{([^}]*)\}/);
     assert.ok(rule, `${label} must style .btn.queue-footer-btn`);

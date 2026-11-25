@@ -8,6 +8,7 @@ import * as data from '../js/data.js';
 import { createStore, buildSidecarURL, parseSidecarURL, findTaskIdInText } from '../js/store.js';
 import { buildPluginSrcdoc } from '../js/plugin_bundle.js';
 import { createMockApi } from '../js/mock_api.js';
+import { SITE_MESSAGES, detectSiteLocale, localizeDemoTask } from '../js/i18n.js';
 
 const read = (path) => readFile(new URL('../' + path, import.meta.url), 'utf8');
 // dist/ 是构建产物（site/dist/ 不入 Git）：缺失时按需生成本地单文件版，
@@ -200,4 +201,36 @@ test('dist 单文件完整内联且脚本有效',async()=>{
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]; assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Function(scripts[0][1])); assert.doesNotMatch(scripts[0][1],/^\s*(?:import|export)\b/m);
   assert.match(html,/id="workbench-root"/);
+});
+
+test('site locale detection, translations and live wiring', async () => {
+  assert.deepEqual(Object.keys(SITE_MESSAGES.en).sort(), Object.keys(SITE_MESSAGES['zh-CN']).sort());
+  const env = (search, saved, language) => ({ location: { search }, localStorage: { getItem: () => saved }, navigator: { language } });
+  assert.equal(detectSiteLocale(env('', null, 'fr-FR')), 'en');
+  assert.equal(detectSiteLocale(env('', null, 'zh-Hant')), 'zh-CN');
+  assert.equal(detectSiteLocale(env('?lang=en', 'zh-CN', 'zh')), 'en');
+  assert.equal(detectSiteLocale(env('?lang=zh', 'en', 'en')), 'zh-CN');
+  assert.equal(detectSiteLocale(env('?lang=invalid', 'zh-CN', 'en')), 'zh-CN');
+  const html = await read('index.html');
+  assert.match(html, /id="lang-toggle"/); assert.match(html, /data-i18n=/);
+  for (const m of html.matchAll(/data-i18n="([^"]+)"/g)) {
+    const key = m[1].replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').replaceAll('&quot;', '"');
+    assert.ok(key in SITE_MESSAGES.en, `missing static translation: ${key}`);
+  }
+  assert.match(await read('js/app.js'), /hostLocaleChanged\(locale\)/);
+  assert.match(await read('js/workbench.js'), /type: 'locale'/);
+});
+test('demo task localization survives reset and preserves user changes', async () => {
+  const store = createStore(); store.resetTestRepo();
+  const task = store.state.tasks[1];
+  const translated = localizeDemoTask(task, 'en');
+  assert.match(translated.title, /Demo Feature/);
+  assert.match(translated.notes[0], /batch queue/);
+  task.title = 'My own title'; task.notes.push('My own note');
+  assert.equal(localizeDemoTask(task, 'en').title, 'My own title');
+  assert.equal(localizeDemoTask(task, 'en').notes[1], 'My own note');
+  let locale = 'en'; const api = createMockApi(store, { locale: () => locale });
+  const fetchTask = async () => (await (await api.fetch('sidecar', `/api/item?id=${task.id}`)).json()).bead;
+  assert.match((await fetchTask()).description, /in-progress/);
+  locale = 'zh-CN'; assert.equal((await fetchTask()).description, task.description);
 });

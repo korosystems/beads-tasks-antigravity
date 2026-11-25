@@ -68,6 +68,7 @@ for (const [entries, contentType] of [[extraWebScripts, 'application/javascript;
 }
 
 for (const [name, global, exports] of [
+  ['i18n', '__tasksI18n', 'SUPPORTED_LOCALES, normalizeLocale, resolveLocale, MESSAGES, createTranslator'],
   ['notes_format', '__tasksNotesFormat', 'formatBeadNotesForDisplay'],
   ['in_page_search', '__tasksInPageSearch', 'MAX_FIND_MARKS, normalizeFindQuery, findTextRanges, splitTextByMatches, nextMatchIndex, shouldHandleFindShortcut'],
   ['review_queue', '__tasksReviewQueue', 'queueNeighbors, shouldHandleQueueShortcut, shouldRestoreSavedQueue'],

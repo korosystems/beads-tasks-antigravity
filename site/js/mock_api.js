@@ -1,11 +1,12 @@
 import { projects } from './data.js';
+import { localizeDemoTask } from './i18n.js';
 export function createMockApi(store, hooks = {}) {
   const state = store.state;
   let settings = { version: 1, emitSidecarLinks: true }, savedQueue = null;
   const record = (channel, event, payload) => state.logs.unshift({ time: new Date().toLocaleTimeString('zh-CN', { hour12: false }), channel, event, payload });
   const projectFor = args => projects.find(p => p.id === args.project || p.repo === args.repo) || projects[0];
   const common = args => ({ project: projectFor(args), projects, activeProjectId: projectFor(args).id });
-  const bead = t => ({ ...t, issue_type: t.type, notes: t.notes.join('\n\n'), created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z', dependencies: [...(t.parent ? [{ id: t.parent, dependency_type: 'parent-child' }] : []), ...t.blockedBy.map(id => ({ id, dependency_type: 'blocks' }))], dependents: state.tasks.filter(x => x.blockedBy.includes(t.id)).map(x => ({ id: x.id, title: x.title, dependency_type: 'blocks' })) });
+  const bead = original => { const t = localizeDemoTask(original, hooks.locale?.() || 'zh-CN'); return ({ ...t, issue_type: t.type, notes: t.notes.join('\n\n'), created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z', dependencies: [...(t.parent ? [{ id: t.parent, dependency_type: 'parent-child' }] : []), ...t.blockedBy.map(id => ({ id, dependency_type: 'blocks' }))], dependents: state.tasks.filter(x => x.blockedBy.includes(t.id)).map(x => ({ id: x.id, title: x.title, dependency_type: 'blocks' })) }); };
   const item = (id, args = {}) => {
     const t = state.tasks.find(x => x.id === id && x.projectId === projectFor(args).id);
     if (!t) return { ok: false, error: `任务不存在：${id}` };
@@ -23,7 +24,7 @@ export function createMockApi(store, hooks = {}) {
       switch (u.pathname) {
         case '/api/projects': data = { ok: true, ...common(args) }; break;
         case '/api/settings': if (options.method === 'POST') { settings = { ...settings, ...(args.settings || args) }; hooks.changed?.(hostId); } data = { ok: true, settings, path: '/mock/settings.json' }; break;
-        case '/api/list': { const all = state.tasks.filter(t => t.projectId === projectFor(args).id && (!args.status || args.status === 'all' || t.status === args.status) && `${t.id} ${t.title} ${t.description} ${t.labels.join(' ')}`.toLowerCase().includes((args.q || '').toLowerCase())); data = { ok: true, ...common(args), items: all.slice(0, Number(args.limit) || 40).map(t => ({ ...bead(t), kind: 'bead' })), total: all.length }; break; }
+        case '/api/list': { const all = state.tasks.filter(t => t.projectId === projectFor(args).id && (!args.status || args.status === 'all' || t.status === args.status) && `${t.id} ${localizeDemoTask(t, hooks.locale?.() || 'zh-CN').title} ${localizeDemoTask(t, hooks.locale?.() || 'zh-CN').description} ${t.labels.join(' ')}`.toLowerCase().includes((args.q || '').toLowerCase())); data = { ok: true, ...common(args), items: all.slice(0, Number(args.limit) || 40).map(t => ({ ...bead(t), kind: 'bead' })), total: all.length }; break; }
         case '/api/batch': {
           const ids = (args.ids || '').split(',').filter(Boolean);
           const items = ids.filter(id => state.tasks.some(t => t.id === id && t.projectId === projectFor(args).id)).map(id => item(id, args));

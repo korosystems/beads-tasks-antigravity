@@ -30,9 +30,14 @@ test('settings default, validation, persistence and damaged files', async (t) =>
   assert.equal(resolveSettingsFile(deps), deps.settingsFile);
   assert.deepEqual(await loadSettings(deps), DEFAULT_SETTINGS);
   assert.deepEqual(normalizeSettings({ version: 9, emitSidecarLinks: 0, other: true }), DEFAULT_SETTINGS);
-  assert.deepEqual(await saveSettings({ emitSidecarLinks: false }, deps), { settings: { version: 1, emitSidecarLinks: false }, path: deps.settingsFile });
+  assert.deepEqual(await saveSettings({ emitSidecarLinks: false }, deps), { settings: { version: 1, emitSidecarLinks: false, locale: 'auto' }, path: deps.settingsFile });
   assert.equal((await loadSettings(deps)).emitSidecarLinks, false);
   await assert.rejects(saveSettings({ emitSidecarLinks: 'false' }, deps), { code: 'EINVALID' });
+  for (const locale of ['en', 'zh-CN', 'auto']) {
+    await saveSettings({ locale }, deps);
+    assert.equal((await loadSettings(deps)).locale, locale);
+  }
+  for (const locale of ['zh', '', null, 1]) await assert.rejects(saveSettings({ locale }, deps), { code: 'EINVALID' });
   await writeFile(deps.settingsFile, '{broken');
   assert.deepEqual(await loadSettings(deps), DEFAULT_SETTINGS);
   await writeFile(deps.settingsFile, '');

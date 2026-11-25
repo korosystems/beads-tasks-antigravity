@@ -44,7 +44,7 @@ const definitions = [
   ['show_task_batch', { ids, title, repo: common.repo, project: common.project }, ['ids'], 'batch', 'Inline interactive batch card for multiple tasks (2–50 IDs) mentioned in the current turn.'],
   ['open_tasks_board', { id, ids, title, status: prop('string', 'Filter the project list by task status.'), query: prop('string', 'Search the project list by ID, title or label.'), limit: prop('number', 'Maximum number of project tasks to return.'), repo: common.repo, project: common.project }, [], 'board', 'Open or update the full-page tasks board (global). All arguments are optional; empty {} opens the default project task list.'],
   ['ui_get_settings', {}, []],
-  ['ui_update_settings', { emitSidecarLinks: { type: 'boolean' } }, []],
+  ['ui_update_settings', { emitSidecarLinks: { type: 'boolean' }, locale: { type: 'string', enum: ['auto', 'en', 'zh-CN'] } }, []],
   ['ui_get_projects', common, []],
   ['ui_get_item', { ...common, id }, ['id']],
   ['ui_get_batch', { ...common, ids }, ['ids']],

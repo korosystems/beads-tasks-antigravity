@@ -1,6 +1,7 @@
 import { createStore, buildSidecarURL, findTaskIdInText, statuses } from "./store.js";
 import { buildPluginSrcdoc } from "./plugin_bundle.js";
 import { createMockApi } from "./mock_api.js";
+import { getSiteCopy, localizeDemoTask } from "./i18n.js";
 const esc = (s) =>
   String(s ?? "").replace(
     /[&<>"']/g,
@@ -18,7 +19,38 @@ const statusName = {
   deferred: "Deferred",
   closed: "Closed",
 };
-export function mountWorkbench(root) {
+export function mountWorkbench(root, options = {}) {
+  let currentLocale = options.locale === "zh-CN" ? "zh-CN" : "en";
+  const originalText = new WeakMap(), originalAttributes = new WeakMap();
+  function translateChrome() {
+    const copy = getSiteCopy(currentLocale);
+    const translate = value => {
+      const trimmed = value.trim();
+      if (copy[trimmed]) return value.replace(trimmed, copy[trimmed]);
+      if (/^新对话 \d+$/.test(trimmed)) return currentLocale === "en" ? trimmed.replace("新对话", "New conversation") : value;
+      if (/^这里是 .+ 的任务详情。$/.test(trimmed)) return currentLocale === "en" ? trimmed.replace(/^这里是 (.+) 的任务详情。$/, "Task details for $1.") : value;
+      for (const key of Object.keys(copy).sort((a, b) => b.length - a.length)) {
+        if (value.includes(key) && (/[\u4e00-\u9fff]/.test(key) || ['New Conversation', 'Settings', 'Ran', 'events', 'tasks'].includes(key))) value = value.replaceAll(key, copy[key]);
+      }
+      return value;
+    };
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.parentElement.closest("iframe, pre, .context-pills")) continue;
+      if (!originalText.has(node)) originalText.set(node, node.nodeValue);
+      node.nodeValue = translate(originalText.get(node));
+    }
+    root.querySelectorAll("[title], [placeholder], [aria-label]").forEach(el => {
+      for (const attr of ["title", "placeholder", "aria-label"]) {
+        if (!el.hasAttribute(attr)) continue;
+        if (!originalAttributes.has(el)) originalAttributes.set(el, {});
+        const attrs = originalAttributes.get(el);
+        if (!(attr in attrs)) attrs[attr] = el.getAttribute(attr);
+        el.setAttribute(attr, translate(attrs[attr]));
+      }
+    });
+  }
   const store = createStore(),
     s = store.state;
   const ui = {
@@ -107,7 +139,7 @@ export function mountWorkbench(root) {
   }
   function menuItems() {
     const query = ui.prompt.match(/(?:^|\s)[/@]([^\s]*)$/)?.[1]?.toLowerCase() || "";
-    const items = ui.menu === "slash" ? commands.map(([id, title]) => ({ id, title })) : [...s.tasks.map((t) => ({ id: t.id, title: t.title })), { id: "Beads Tasks (MCP)", title: "MCP" }];
+    const items = ui.menu === "slash" ? commands.map(([id, title]) => ({ id, title })) : [...s.tasks.map((t) => ({ id: t.id, title: localizeDemoTask(t, currentLocale).title })), { id: "Beads Tasks (MCP)", title: "MCP" }];
     return items.filter((item) => `${item.id} ${item.title}`.toLowerCase().includes(query));
   }
   function menu() {
@@ -224,14 +256,14 @@ export function mountWorkbench(root) {
   });
   function renderToast() {
     const el = root.querySelector(".wb-toast");
-    if (el) { el.textContent = ui.toast; el.hidden = !ui.toast; }
+    if (el) { el.textContent = getSiteCopy(currentLocale)[ui.toast] || ui.toast; el.hidden = !ui.toast; }
   }
   function initFrame(frame, index) {
     const mode = frame.dataset.plugin;
     const hostId = mode === 'sidecar' ? 'sidecar' : mode === 'mcp-board' ? 'board' : `inline-${index}`;
     frame.dataset.hostId = hostId;
     frames.set(hostId, frame);
-    frame.srcdoc = buildPluginSrcdoc({ mode, hostId, search: frame.dataset.search, theme: document.documentElement.dataset.theme || 'light', conversationId: s.conversationId, initialPayload: mode === 'sidecar' ? null : mock.getInitialPayload(mode, frame.dataset.search) });
+    frame.srcdoc = buildPluginSrcdoc({ mode, hostId, search: frame.dataset.search, theme: document.documentElement.dataset.theme || 'light', locale: currentLocale, conversationId: s.conversationId, initialPayload: mode === 'sidecar' ? null : mock.getInitialPayload(mode, frame.dataset.search) });
   }
   function syncChromeAndSidecar() {
     const grid = root.querySelector('.workbench-grid');
@@ -266,6 +298,7 @@ export function mountWorkbench(root) {
         panel.insertAdjacentHTML('beforeend', '<div class="inspector"></div>');
       }
       panel.querySelector('.inspector').innerHTML = inspector();
+      translateChrome();
       const logs = panel.querySelector('.logs');
       if (logs) logs.scrollTop = scrollTop;
     }
@@ -286,6 +319,7 @@ export function mountWorkbench(root) {
       const el = root.querySelector(selector);
       if (el) el.scrollTop = scrollTop;
     }
+    translateChrome();
     snapshot = stateSnapshot();
     if (filter) {
       const el = root.querySelector(`[data-filter="${filter}"]`);
@@ -640,6 +674,7 @@ export function mountWorkbench(root) {
   });
   const mock = createMockApi(store, {
     copy,
+    locale: () => currentLocale,
     send(text) { ui.view = 'chat'; toast('已发送到当前对话'); },
     context(text) { store.attachContext({ id: 'Beads Tasks', title: text }); },
     changed(hostId) { setTimeout(() => frames.forEach((frame, id) => { if (id !== hostId) frame.contentWindow?.postMessage({ kind: 'beads-host', type: 'refresh' }, '*'); }), 0); },
@@ -704,6 +739,15 @@ export function mountWorkbench(root) {
     store,
     demo(kind) { ui.view = kind === "board" ? "board" : "chat"; if (kind === "inline") respond("/list"); else if (kind === "sidecar") batch(s.tasks.filter((t) => t.projectId === "test-repo").map((t) => t.id)); else store.log("mcp", "tools/call", { name: "open_tasks_board", surface: "global", hostCapabilities: { message: false } }); },
     reset() { const ids = store.resetTestRepo(); ui.view = "chat"; store.message("assistant", "已重置 test-repo，生成新的哈希编号。", ids, "batch"); toast("重置完成"); },
+    hostLocaleChanged(locale) {
+      currentLocale = locale === 'zh-CN' ? 'zh-CN' : 'en';
+      translateChrome();
+      renderToast();
+      frames.forEach(frame => {
+        frame.contentWindow?.postMessage({ kind: 'beads-host', type: 'locale', locale: currentLocale }, '*');
+        frame.contentWindow?.postMessage({ kind: 'beads-host', type: 'refresh' }, '*');
+      });
+    },
     hostThemeChanged(theme) {
       const css = getComputedStyle(document.documentElement);
       const variables = Object.fromEntries(["--color-background-primary", "--color-background-secondary", "--color-text-primary", "--color-border-primary"].map((key) => [key, css.getPropertyValue(key).trim()]));
