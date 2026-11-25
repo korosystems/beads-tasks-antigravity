@@ -173,6 +173,24 @@ test('侧栏回传多行 Markdown 识别任务而非误判 /show', async () => {
   assert.equal(last.tool?.name, 'show_task_card');
   assert.doesNotMatch(JSON.stringify(msgs), /任务不存在/);
 });
+test('侧栏链接图标与局部更新保留聊天滚动位置', async () => {
+  const workbench = await read('js/workbench.js');
+  assert.doesNotMatch(workbench, /\[(?:在右侧 Beads Tasks 侧栏打开|⧉|↗)\]/);
+  assert.match(workbench, /data:image\/svg\+xml/);
+  assert.match(workbench, /class="sidecar-pill"/);
+  assert.match(workbench, /pluginIcon\('sidecar-pill-icon'\)|pluginIcon\("sidecar-pill-icon"\)/);
+  assert.match(workbench, /function toast\(text\) \{[\s\S]*?renderToast\(\);[\s\S]*?\n  \}/);
+  assert.doesNotMatch(workbench.match(/function toast\(text\) \{[\s\S]*?\n  \}/)[0], /\brender\(\)/);
+  assert.match(workbench, /store\.subscribe\(\(\) => \{[\s\S]*?stateSnapshot\(\)[\s\S]*?syncChromeAndSidecar\(\)/);
+  for (const action of ['sidebar', 'auxiliary', 'tab', 'channel', 'log']) {
+    assert.match(workbench, new RegExp(`case "${action}":[\\s\\S]*?syncChromeAndSidecar\\(\\)`));
+  }
+  assert.match(workbench, /'\.chat-scroll', '\.wb-sidebar', '\.logs'/);
+  assert.match(workbench, /frame\.style\.height = heights\[index\]/);
+  assert.match(workbench, /el\.scrollTop = scrollTop/);
+  const html = await read('index.html');
+  for (const id of ['brand-bg', 'brand-gold', 'footer-bg', 'footer-gold']) assert.equal([...html.matchAll(new RegExp(`id="${id}"`, 'g'))].length, 1);
+});
 test('dist 单文件完整内联且脚本有效',async()=>{
   await ensureStandalone();
   const html=await read('dist/antigravity-showcase.html'); nesting(html);

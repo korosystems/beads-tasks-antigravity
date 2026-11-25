@@ -9,6 +9,8 @@ const esc = (s) =>
         c
       ],
   );
+const PLUGIN_ICON_DATA_URI = "data:image/svg+xml," + encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 128 128\" width=\"128\" height=\"128\" fill=\"none\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"64\" y1=\"12\" x2=\"64\" y2=\"116\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#4BA3FA\"/><stop offset=\"1\" stop-color=\"#2463D8\"/></linearGradient>\n    <linearGradient id=\"gold\" x1=\"30\" y1=\"31\" x2=\"30\" y2=\"53\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#FFD447\"/><stop offset=\"1\" stop-color=\"#F7B22A\"/></linearGradient>\n  </defs>\n  <rect x=\"12\" y=\"12\" width=\"104\" height=\"104\" rx=\"26\" fill=\"url(#bg)\"/>\n  <g transform=\"translate(12 12) scale(1.625)\">\n    <path d=\"M 13.5 40.2 Q 13.5 38.2 14.9 39.6 L 21.9 46.6 A 6.5 6.5 0 0 0 31.1 46.6 L 45.1 32.6 Q 46.5 31.2 46.5 33.2 L 46.5 49 A 4 4 0 0 1 42.5 53 L 17.5 53 A 4 4 0 0 1 13.5 49 Z\" fill=\"url(#gold)\"/>\n    <path d=\"M 15.5 31 L 26.5 42 L 51.5 17\" stroke=\"#fff\" stroke-width=\"7.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>");
+const pluginIcon = (extra = "") => `<img class="plugin-icon ${extra}" src="${PLUGIN_ICON_DATA_URI}" alt="" aria-hidden="true" />`;
 const statusName = {
   open: "Open",
   in_progress: "In progress",
@@ -56,15 +58,15 @@ export function mountWorkbench(root) {
   let toastTimer;
   function toast(text) {
     ui.toast = text;
-    render();
+    renderToast();
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       ui.toast = "";
-      render();
+      renderToast();
     }, 3000);
   }
   const buttons = (id) =>
-    `<button data-action="copy-id" data-id="${esc(id)}" title="复制 ID 并打开侧栏">[⧉]</button><button data-action="open" data-id="${esc(id)}" title="在侧栏打开">[↗]</button>`;
+    `<button class="sidecar-pill" data-action="copy-id" data-id="${esc(id)}" title="复制 ID 并打开侧栏">${pluginIcon("sidecar-pill-icon")}<span>⧉</span></button><button class="sidecar-pill" data-action="open" data-id="${esc(id)}" title="在侧栏打开">${pluginIcon("sidecar-pill-icon")}<span>↗</span></button>`;
   const statusSelect = (value, which) =>
     `<select aria-label="状态筛选" data-filter="${which}Status"><option value="all">所有状态</option>${statuses.map((x) => `<option value="${x}" ${value === x ? "selected" : ""}>${statusName[x]}</option>`).join("")}</select>`;
   const statusButtons = (t) =>
@@ -127,11 +129,11 @@ export function mountWorkbench(root) {
               ? `<div class="id-links">${m.ids
                   .map(
                     (id) =>
-                      `<span><code>${esc(id)}</code> ${m.ids.length <= 5 ? buttons(id) : m.ids.length <= 10 ? `<button data-action="open" data-id="${esc(id)}" title="在侧栏打开">[↗]</button>` : ""}</span>`,
+                      `<span><code>${esc(id)}</code> ${m.ids.length <= 5 ? buttons(id) : m.ids.length <= 10 ? `<button class="sidecar-pill" data-action="open" data-id="${esc(id)}" title="在侧栏打开">${pluginIcon("sidecar-pill-icon")}<span>↗</span></button>` : ""}</span>`,
                   )
                   .join(
                     "",
-                  )}</div>${inline(m.ids, m.kind)}${m.ids.length >= 2 ? `<button class="text-button separate-link" data-action="batch" data-ids="${esc(m.ids.join(","))}">[在右侧 Beads Tasks 侧栏打开]</button>` : ""}`
+                  )}</div>${inline(m.ids, m.kind)}${m.ids.length >= 2 ? `<button class="text-button separate-link" data-action="batch" data-ids="${esc(m.ids.join(","))}">${pluginIcon("sidecar-pill-icon")}<span>在右侧 Beads Tasks 侧栏打开</span></button>` : ""}`
               : ""
           }</div></div>`,
       )
@@ -215,19 +217,76 @@ export function mountWorkbench(root) {
       : "0 / 0";
   }
   const frames = new Map();
+  let snapshot;
+  const stateSnapshot = () => JSON.stringify({
+    messages: s.messages, conversationId: s.conversationId, context: s.context,
+    tasks: s.tasks, conversations: s.conversations, view: ui.view,
+  });
+  function renderToast() {
+    const el = root.querySelector(".wb-toast");
+    if (el) { el.textContent = ui.toast; el.hidden = !ui.toast; }
+  }
+  function initFrame(frame, index) {
+    const mode = frame.dataset.plugin;
+    const hostId = mode === 'sidecar' ? 'sidecar' : mode === 'mcp-board' ? 'board' : `inline-${index}`;
+    frame.dataset.hostId = hostId;
+    frames.set(hostId, frame);
+    frame.srcdoc = buildPluginSrcdoc({ mode, hostId, search: frame.dataset.search, theme: document.documentElement.dataset.theme || 'light', conversationId: s.conversationId, initialPayload: mode === 'sidecar' ? null : mock.getInitialPayload(mode, frame.dataset.search) });
+  }
+  function syncChromeAndSidecar() {
+    const grid = root.querySelector('.workbench-grid');
+    if (!grid) return;
+    grid.classList.toggle('no-sidebar', !ui.sidebar);
+    grid.classList.toggle('no-aux', !ui.auxiliary);
+    const panel = root.querySelector('.sidecar');
+    const tabs = panel.querySelectorAll('[data-action="tab"]');
+    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.value === ui.tab));
+    tabs[1].querySelector('span').textContent = s.logs.length;
+    const current = panel.querySelector('.sidecar-frame');
+    const inspectorEl = panel.querySelector('.inspector');
+    if (ui.tab === 'side') {
+      const search = buildSidecarURL(s.route).split('?')[1];
+      const desired = search ? '?' + search : '';
+      if (!current || current.dataset.search !== desired) {
+        frames.delete('sidecar');
+        panel.querySelector('.address')?.remove();
+        current?.remove();
+        inspectorEl?.remove();
+        panel.insertAdjacentHTML('beforeend', side());
+        initFrame(panel.querySelector('.sidecar-frame'), 0);
+      } else {
+        panel.querySelector('.address span').textContent = buildSidecarURL(s.route);
+      }
+    } else {
+      const scrollTop = panel.querySelector('.logs')?.scrollTop || 0;
+      if (!inspectorEl) {
+        frames.delete('sidecar');
+        panel.querySelector('.address')?.remove();
+        current?.remove();
+        panel.insertAdjacentHTML('beforeend', '<div class="inspector"></div>');
+      }
+      panel.querySelector('.inspector').innerHTML = inspector();
+      const logs = panel.querySelector('.logs');
+      if (logs) logs.scrollTop = scrollTop;
+    }
+  }
   function render() {
+    const scrollPositions = Object.fromEntries(['.chat-scroll', '.wb-sidebar', '.logs'].map(selector => [selector, root.querySelector(selector)?.scrollTop || 0]));
+    const heights = [...root.querySelectorAll('iframe[data-plugin="mcp-inline"]')].map(frame => frame.style.height || `${frame.getBoundingClientRect().height}px`);
     frames.clear();
     const active = document.activeElement,
       filter = active?.dataset?.filter,
       start = active?.selectionStart;
-    root.innerHTML = `<div class="workbench"><div class="workbench-grid ${ui.sidebar ? "" : "no-sidebar"} ${ui.auxiliary ? "" : "no-aux"}"><aside class="wb-sidebar"><button class="new-conversation" data-action="new">＋ New Conversation</button><div class="workspace"><small>WORKSPACE</small><b>▣ &nbsp;test-repo</b><span>● embedded Dolt</span>${s.conversations.map((c) => `<button data-action="conversation" data-id="${esc(c.id)}" class="${ui.view === "chat" && s.conversationId === c.id ? "selected" : ""}">▤ ${esc(c.title)}</button>`).join("")}</div><div class="side-nav"><small>PLUGINS</small><button data-action="board" class="${ui.view === "board" ? "selected" : ""}">▦ Beads Tasks <span>Global</span></button></div><div class="scenarios"><small>QUICK FLOWS</small>${["列出 test-repo 四态任务", "打开单任务卡片", "写操作闭环（优先级/备注/Reopen）", "重置沙盒生成新哈希 ID"].map((x, i) => `<button data-action="scenario" data-value="${i}">${esc(x)}</button>`).join("")}</div><button class="settings-button" data-action="settings">⚙ Settings</button></aside><section class="canvas"><div class="canvas-head"><div><button data-action="sidebar" title="切换侧栏">☰</button><b>${ui.view === "chat" ? esc(s.conversations.find((c) => c.id === s.conversationId).title) : "Plugins / Beads Tasks"}</b></div><div><span class="model-pill">${esc(ui.model)}</span><button data-action="auxiliary">● Beads Tasks 侧栏</button></div></div>${ui.view === "chat" ? chat() : board()}</section><aside class="sidecar"><div class="aux-tabs"><button data-action="tab" data-value="side" class="${ui.tab === "side" ? "active" : ""}">Beads Tasks</button><button data-action="tab" data-value="protocol" class="${ui.tab === "protocol" ? "active" : ""}">Protocol <span>${s.logs.length}</span></button><button data-action="auxiliary" aria-label="关闭辅助面板">×</button></div>${ui.tab === "side" ? side() : `<div class="inspector">${inspector()}</div>`}</aside></div>${ui.settings ? `<div class="settings-overlay"><div class="settings-panel"><div><b>Antigravity Settings</b><button data-action="settings">×</button></div><label>模型名展示 <select data-setting="model"><option ${ui.model === "Gemini" ? "selected" : ""}>Gemini</option><option ${ui.model === "Gemini Pro" ? "selected" : ""}>Gemini Pro</option></select></label><label>权限策略展示 <select data-setting="permission"><option ${ui.permission === "Ask first" ? "selected" : ""}>Ask first</option><option ${ui.permission === "Auto" ? "selected" : ""}>Auto</option></select></label><p>插件设置可在侧栏或看板中调整。</p></div></div>` : ""}<div class="wb-toast" role="status" aria-live="polite" ${ui.toast ? "" : "hidden"}>${esc(ui.toast)}</div></div>`;
-    root.querySelectorAll('iframe[data-plugin]').forEach((frame, index) => {
-      const mode = frame.dataset.plugin;
-      const hostId = mode === 'sidecar' ? 'sidecar' : mode === 'mcp-board' ? 'board' : `inline-${index}`;
-      frame.dataset.hostId = hostId;
-      frames.set(hostId, frame);
-      frame.srcdoc = buildPluginSrcdoc({ mode, hostId, search: frame.dataset.search, theme: document.documentElement.dataset.theme || 'light', conversationId: s.conversationId, initialPayload: mode === 'sidecar' ? null : mock.getInitialPayload(mode, frame.dataset.search) });
+    root.innerHTML = `<div class="workbench"><div class="workbench-grid ${ui.sidebar ? "" : "no-sidebar"} ${ui.auxiliary ? "" : "no-aux"}"><aside class="wb-sidebar"><button class="new-conversation" data-action="new">＋ New Conversation</button><div class="workspace"><small>WORKSPACE</small><b>▣ &nbsp;test-repo</b><span>● embedded Dolt</span>${s.conversations.map((c) => `<button data-action="conversation" data-id="${esc(c.id)}" class="${ui.view === "chat" && s.conversationId === c.id ? "selected" : ""}">▤ ${esc(c.title)}</button>`).join("")}</div><div class="side-nav"><small>PLUGINS</small><button data-action="board" class="${ui.view === "board" ? "selected" : ""}">${pluginIcon()} Beads Tasks <span>Global</span></button></div><div class="scenarios"><small>QUICK FLOWS</small>${["列出 test-repo 四态任务", "打开单任务卡片", "写操作闭环（优先级/备注/Reopen）", "重置沙盒生成新哈希 ID"].map((x, i) => `<button data-action="scenario" data-value="${i}">${esc(x)}</button>`).join("")}</div><button class="settings-button" data-action="settings">⚙ Settings</button></aside><section class="canvas"><div class="canvas-head"><div><button data-action="sidebar" title="切换侧栏">☰</button><b>${ui.view === "chat" ? esc(s.conversations.find((c) => c.id === s.conversationId).title) : "Plugins / Beads Tasks"}</b></div><div><span class="model-pill">${esc(ui.model)}</span><button data-action="auxiliary">${pluginIcon()} Beads Tasks 侧栏</button></div></div>${ui.view === "chat" ? chat() : board()}</section><aside class="sidecar"><div class="aux-tabs"><button data-action="tab" data-value="side" class="${ui.tab === "side" ? "active" : ""}">${pluginIcon()} Beads Tasks</button><button data-action="tab" data-value="protocol" class="${ui.tab === "protocol" ? "active" : ""}">Protocol <span>${s.logs.length}</span></button><button data-action="auxiliary" aria-label="关闭辅助面板">×</button></div>${ui.tab === "side" ? side() : `<div class="inspector">${inspector()}</div>`}</aside></div>${ui.settings ? `<div class="settings-overlay"><div class="settings-panel"><div><b>Antigravity Settings</b><button data-action="settings">×</button></div><label>模型名展示 <select data-setting="model"><option ${ui.model === "Gemini" ? "selected" : ""}>Gemini</option><option ${ui.model === "Gemini Pro" ? "selected" : ""}>Gemini Pro</option></select></label><label>权限策略展示 <select data-setting="permission"><option ${ui.permission === "Ask first" ? "selected" : ""}>Ask first</option><option ${ui.permission === "Auto" ? "selected" : ""}>Auto</option></select></label><p>插件设置可在侧栏或看板中调整。</p></div></div>` : ""}<div class="wb-toast" role="status" aria-live="polite" ${ui.toast ? "" : "hidden"}>${esc(ui.toast)}</div></div>`;
+    root.querySelectorAll('iframe[data-plugin="mcp-inline"]').forEach((frame, index) => {
+      if (heights[index]) frame.style.height = heights[index];
     });
+    root.querySelectorAll('iframe[data-plugin]').forEach(initFrame);
+    for (const [selector, scrollTop] of Object.entries(scrollPositions)) {
+      const el = root.querySelector(selector);
+      if (el) el.scrollTop = scrollTop;
+    }
+    snapshot = stateSnapshot();
     if (filter) {
       const el = root.querySelector(`[data-filter="${filter}"]`);
       if (el) {
@@ -316,9 +375,9 @@ export function mountWorkbench(root) {
     switch (action) {
       case "new": ui.view = "chat"; store.createConversation(); break;
       case "conversation": ui.view = "chat"; store.switchConversation(id); break;
-      case "sidebar": ui.sidebar = !ui.sidebar; if (ui.sidebar && window.matchMedia("(max-width: 760px)").matches) ui.auxiliary = false; render(); break;
-      case "auxiliary": ui.auxiliary = !ui.auxiliary; if (ui.auxiliary && window.matchMedia("(max-width: 760px)").matches) ui.sidebar = false; render(); break;
-      case "tab": ui.tab = value; render(); break;
+      case "sidebar": ui.sidebar = !ui.sidebar; if (ui.sidebar && window.matchMedia("(max-width: 760px)").matches) ui.auxiliary = false; syncChromeAndSidecar(); break;
+      case "auxiliary": ui.auxiliary = !ui.auxiliary; if (ui.auxiliary && window.matchMedia("(max-width: 760px)").matches) ui.sidebar = false; syncChromeAndSidecar(); break;
+      case "tab": ui.tab = value; syncChromeAndSidecar(); break;
       case "settings": ui.settings = !ui.settings; render(); break;
       case "attach": { const t = s.tasks.find((x) => x.id === id); if (t) store.attachContext({ id: t.id, title: t.title }); break; }
       case "detach": store.clearContext(id); break;
@@ -422,7 +481,7 @@ export function mountWorkbench(root) {
         break;
       case "inspector":
         ui.inspector = !ui.inspector;
-        render();
+        syncChromeAndSidecar();
         break;
       case "clear-logs":
         ui.openLogs.clear();
@@ -430,12 +489,12 @@ export function mountWorkbench(root) {
         break;
       case "channel":
         ui.channel = value;
-        render();
+        syncChromeAndSidecar();
         break;
       case "log": {
         const n = Number(value);
         ui.openLogs.has(n) ? ui.openLogs.delete(n) : ui.openLogs.add(n);
-        render();
+        syncChromeAndSidecar();
         break;
       }
       case "scenario":
@@ -594,8 +653,10 @@ export function mountWorkbench(root) {
       if (msg.hostId !== 'sidecar') return;
       const p = new URLSearchParams(msg.query);
       s.route = { id: p.get('id') || '', ids: (p.get('ids') || '').split(',').filter(Boolean), repo: p.get('repo') || '', title: p.get('title') || '' };
+      const url = buildSidecarURL(s.route);
+      frame.dataset.search = url.includes('?') ? '?' + url.split('?')[1] : '';
       const address = root.querySelector('.address span');
-      if (address) address.textContent = buildSidecarURL(s.route);
+      if (address) address.textContent = url;
       return;
     }
     if (msg.type === 'resize') {
@@ -634,7 +695,10 @@ export function mountWorkbench(root) {
     defaultIds,
     "batch",
   );
-  store.subscribe(render);
+  store.subscribe(() => {
+    if (snapshot !== stateSnapshot()) render();
+    else syncChromeAndSidecar();
+  });
   render();
   return {
     store,

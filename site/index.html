@@ -9,7 +9,17 @@
 </head>
 <body>
 <header class="site-header">
-  <a class="brand" href="#intro"><span class="brand-mark">✳</span><b>Beads Tasks</b><small>Antigravity 插件</small></a>
+  <a class="brand" href="#intro"><svg class="brand-logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <defs>
+    <linearGradient id="brand-bg" x1="64" y1="12" x2="64" y2="116" gradientUnits="userSpaceOnUse"><stop stop-color="#4BA3FA"/><stop offset="1" stop-color="#2463D8"/></linearGradient>
+    <linearGradient id="brand-gold" x1="30" y1="31" x2="30" y2="53" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD447"/><stop offset="1" stop-color="#F7B22A"/></linearGradient>
+  </defs>
+  <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#brand-bg)"/>
+  <g transform="translate(12 12) scale(1.625)">
+    <path d="M 13.5 40.2 Q 13.5 38.2 14.9 39.6 L 21.9 46.6 A 6.5 6.5 0 0 0 31.1 46.6 L 45.1 32.6 Q 46.5 31.2 46.5 33.2 L 46.5 49 A 4 4 0 0 1 42.5 53 L 17.5 53 A 4 4 0 0 1 13.5 49 Z" fill="url(#brand-gold)"/>
+    <path d="M 15.5 31 L 26.5 42 L 51.5 17" stroke="#fff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg><b>Beads Tasks</b><small>Antigravity 插件</small></a>
   <nav aria-label="主导航"><a class="active" href="#intro">简介</a><a href="#install">安装</a><a href="#playground">在线试用</a></nav>
   <div class="header-actions"><a class="header-github" href="https://github.com/korosystems/beads-tasks-antigravity" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库">GitHub ↗</a><button id="theme" aria-label="切换明暗主题">◐</button><a class="header-cta" href="#playground">开始试用 ↓</a></div>
 </header>
@@ -36,7 +46,17 @@
       </div>
     </div>
   </section>
-  <footer><span>✳ Beads Tasks (beads-tasks) · MIT · 页面交互为本地模拟</span><span class="footer-links"><a href="https://github.com/korosystems/beads-tasks-antigravity" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://github.com/korosystems/beads-tasks-antigravity/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a><a href="#intro">回到顶部 ↑</a></span></footer>
+  <footer><span class="footer-brand"><svg class="brand-logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <defs>
+    <linearGradient id="footer-bg" x1="64" y1="12" x2="64" y2="116" gradientUnits="userSpaceOnUse"><stop stop-color="#4BA3FA"/><stop offset="1" stop-color="#2463D8"/></linearGradient>
+    <linearGradient id="footer-gold" x1="30" y1="31" x2="30" y2="53" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD447"/><stop offset="1" stop-color="#F7B22A"/></linearGradient>
+  </defs>
+  <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#footer-bg)"/>
+  <g transform="translate(12 12) scale(1.625)">
+    <path d="M 13.5 40.2 Q 13.5 38.2 14.9 39.6 L 21.9 46.6 A 6.5 6.5 0 0 0 31.1 46.6 L 45.1 32.6 Q 46.5 31.2 46.5 33.2 L 46.5 49 A 4 4 0 0 1 42.5 53 L 17.5 53 A 4 4 0 0 1 13.5 49 Z" fill="url(#footer-gold)"/>
+    <path d="M 15.5 31 L 26.5 42 L 51.5 17" stroke="#fff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg> Beads Tasks (beads-tasks) · MIT · 页面交互为本地模拟</span><span class="footer-links"><a href="https://github.com/korosystems/beads-tasks-antigravity" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://github.com/korosystems/beads-tasks-antigravity/issues" target="_blank" rel="noopener noreferrer">Issues ↗</a><a href="#intro">回到顶部 ↑</a></span></footer>
   <section id="playground" aria-label="在线试用工作台">
     <div class="playground-bar"><span>在线试用 · test-repo 本地沙盒（纯前端模拟）</span><div><button id="reset">重置沙盒</button><a href="#install">↑ 安装命令</a><a href="#intro">↑ 回到顶部</a></div></div>
     <div id="workbench-root"></div>
