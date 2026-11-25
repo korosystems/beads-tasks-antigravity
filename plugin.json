@@ -1,0 +1,18 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "beads-tasks",
+  "displayName": "Beads Tasks",
+  "version": "0.1.0",
+  "description": "Inspect and manage Beads (bd) issues in Antigravity with MCP Apps inline cards, a full-page board, and a clickable sidecar:// side panel.",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "List recent Beads issues in this repository with clickable side panel links",
+    "Inspect a Bead issue's details, dependencies, and notes",
+    "Summarize all Beads issues mentioned in this turn and open a batch review list"
+  ],
+  "author": { "name": "kokoro", "url": "https://github.com/korosystems" },
+  "homepage": "https://korosystems.github.io/beads-tasks-antigravity/",
+  "repository": "https://github.com/korosystems/beads-tasks-antigravity",
+  "license": "MIT",
+  "keywords": ["beads", "bd", "tasks", "issues", "kanban", "mcp-app"]
+}

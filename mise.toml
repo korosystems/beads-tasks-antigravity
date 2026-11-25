@@ -1,0 +1,16 @@
+[tasks.install]
+run = "./scripts/install.sh"
+[tasks.install-symlink]
+run = "./scripts/install.sh --symlink"
+[tasks.uninstall]
+run = "./scripts/install.sh --uninstall"
+[tasks.build-mcp]
+run = "node scripts/build-mcp.mjs"
+[tasks.check]
+run = '''
+for f in sidecars/tasks/*.mjs sidecars/tasks/web/*.mjs sidecars/tasks/web/app.js mcp/src/*.mjs mcp/web/*.mjs mcp/tests/*.mjs scripts/*.mjs; do
+  node --check "$f" || exit
+done
+'''
+[tasks.test]
+run = "node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs"

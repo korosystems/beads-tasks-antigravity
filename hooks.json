@@ -1,0 +1,6 @@
+{
+  "beads-tasks-settings": {
+    "enabled": true,
+    "PreInvocation": [{ "type": "command", "command": "node ./scripts/hook-settings.mjs", "timeout": 5 }]
+  }
+}

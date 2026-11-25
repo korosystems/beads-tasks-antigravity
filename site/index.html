@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Beads Tasks：在 Antigravity 中管理 Beads 任务的插件，支持在线试用。">
+  <title>Beads Tasks · Antigravity 插件</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#intro"><span class="brand-mark">✳</span><b>Beads Tasks</b><small>Antigravity 插件</small></a>
+  <nav aria-label="主导航"><a class="active" href="#intro">简介</a><a href="#install">安装</a><a href="#playground">在线试用</a></nav>
+  <div class="header-actions"><button id="theme" aria-label="切换明暗主题">◐</button><a class="header-cta" href="#playground">开始试用 ↓</a></div>
+</header>
+<main>
+  <section id="intro" class="intro">
+    <div class="intro-inner">
+      <span class="intro-badge">beads-tasks · Antigravity Plugin · 零 npm 依赖</span>
+      <h1>在 Antigravity 里，<br>直接流转每一条 Beads 任务。</h1>
+      <p class="intro-lead">集成对话内 MCP Apps 卡片、左侧全页看板与右侧 Sidecar 评审面板。仅依赖原生 <code>bd</code> 即可零配置独立使用。</p>
+      <div class="intro-actions"><a class="action-primary" href="#playground">向下滑动试用 ↓</a><a class="action-secondary" href="#install">安装说明</a></div>
+      <div class="feature-grid">
+        <article><span class="feature-number">01 / INLINE &amp; BOARD</span><h2>MCP Apps 内联与全页</h2><p>对话内渲染 <code>show_task_card</code> / <code>show_task_batch</code>，或从左侧 Plugins 打开 <code>open_tasks_board</code> 全页看板。</p><small>对话卡片 · 全页看板</small></article>
+        <article><span class="feature-number">02 / SIDECAR</span><h2>Sidecar 持久评审面板</h2><p>通过 <code>sidecar://</code> 进入右侧栏，逐条查看评审队列、页内搜索，并通过 <code>agentapi</code> 发回对话。</p><small>逐条查看 ▶ · 双向回传</small></article>
+        <article><span class="feature-number">03 / ZERO CONFIG</span><h2>零配置 · 独立可用</h2><p>自动探测工作区 <code>.beads/</code>；直接使用 <code>bd</code> 读写任务。</p><small>自动发现 · 开箱即用</small></article>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#playground">↓ 向下查看安装并进入底部全屏试用</a>
+  </section>
+  <section id="install" class="install">
+    <div class="install-inner"><div class="install-heading"><span class="eyebrow">GET STARTED</span><h2>两步接入你的 Antigravity</h2></div>
+      <div class="install-grid">
+        <article class="code-card"><div><h3>01 · 安装插件</h3><button data-copy="install-command">复制</button></div><pre><code id="install-command">agy plugin install https://github.com/korosystems/beads-tasks-antigravity</code></pre><p><a href="https://github.com/korosystems/beads-tasks-antigravity">查看 GitHub 仓库</a>。</p></article>
+        <article class="code-card"><div><h3>02 · 零配置试用 / Sidecar 直连</h3><button data-copy="sidecar-command">复制</button></div><pre><code id="sidecar-command">sidecar://beads-tasks/tasks/?repo=%2Fpath%2Fto%2Fyour-repo</code></pre><p>打开含 <code>.beads/</code> 的工作区即可自动探测。</p></article>
+      </div>
+    </div>
+  </section>
+  <footer><span>✳ Beads Tasks (beads-tasks) · MIT · 页面交互为本地模拟</span><a href="#intro">回到顶部 ↑</a></footer>
+  <section id="playground" aria-label="在线试用工作台">
+    <div class="playground-bar"><span>在线试用 · test-repo 本地沙盒（纯前端模拟）</span><div><button id="reset">重置沙盒</button><a href="#install">↑ 安装命令</a><a href="#intro">↑ 回到顶部</a></div></div>
+    <div id="workbench-root"></div>
+  </section>
+</main>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

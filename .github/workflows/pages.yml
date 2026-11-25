@@ -1,0 +1,67 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "site/**"
+      - "sidecars/tasks/web/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sync real plugin UI & build standalone
+        run: node site/scripts/sync-plugin.mjs && node site/scripts/build-standalone.mjs
+
+      - name: Run site checks & tests
+        run: |
+          for f in site/js/*.js site/scripts/*.mjs site/tests/*.mjs; do
+            node --check "$f"
+          done
+          node --test site/tests/site.test.mjs
+
+      - name: Assemble Pages output
+        run: |
+          mkdir -p _site
+          cp site/index.html site/styles.css _site/
+          cp -R site/js _site/js
+          : > _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

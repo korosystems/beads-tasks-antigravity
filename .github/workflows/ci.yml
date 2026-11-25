@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix mcp
+      - run: node scripts/build-mcp.mjs
+      - run: git diff --exit-code mcp/dist
+      - run: node site/scripts/sync-plugin.mjs
+      - name: Syntax check
+        run: |
+          for f in sidecars/tasks/*.mjs sidecars/tasks/web/*.mjs sidecars/tasks/web/app.js mcp/src/*.mjs mcp/web/*.mjs mcp/tests/*.mjs scripts/*.mjs site/js/*.js site/scripts/*.mjs site/tests/*.mjs; do
+            node --check "$f" || exit 1
+          done
+      - run: node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs site/tests/*.test.mjs
+      - name: Check Core dependencies
+        run: '! grep -RniE "sqlite[3]|conversation[_]summaries" sidecars/tasks mcp/src mcp/web scripts'

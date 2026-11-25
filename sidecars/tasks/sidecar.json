@@ -1,0 +1,9 @@
+{
+  "command": "node",
+  "args": ["main.mjs"],
+  "restart_policy": "always",
+  "display_name": "Beads Tasks",
+  "description": "Side panel viewer and manager for Beads (bd) issues with single-card and batch-list sidecar:// navigation.",
+  "has_web_ui": true,
+  "ui_config": { "display_name": "Beads Tasks", "views": [{ "path": "/", "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE", "title": "Beads Tasks" }] }
+}
