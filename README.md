@@ -1,6 +1,12 @@
 # Beads Tasks
 
-Inspect and manage Beads issues in Antigravity using interactive MCP Apps cards, a full-page board, and a clickable side panel. [简体中文](README.zh-CN.md)
+[![CI](https://github.com/korosystems/beads-tasks-antigravity/actions/workflows/ci.yml/badge.svg)](https://github.com/korosystems/beads-tasks-antigravity/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/korosystems/beads-tasks-antigravity)](https://github.com/korosystems/beads-tasks-antigravity/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+[GitHub Repository](https://github.com/korosystems/beads-tasks-antigravity) · [Live Demo](https://korosystems.github.io/beads-tasks-antigravity/) · [Issues & Support](https://github.com/korosystems/beads-tasks-antigravity/issues) · [简体中文](README.zh-CN.md)
+
+Inspect and manage Beads issues in Antigravity using interactive MCP Apps cards, a full-page board, and a clickable side panel.
 
 ## Prerequisites
 
@@ -56,7 +62,7 @@ Open settings in the board or side panel to control whether replies include side
 ```sh
 npm ci --prefix mcp
 node scripts/build-mcp.mjs
-node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs
+node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs site/tests/*.test.mjs
 agy plugin validate --strict .
 ```
 

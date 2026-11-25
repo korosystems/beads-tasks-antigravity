@@ -1,6 +1,12 @@
 # Beads Tasks
 
-通过 Antigravity 的 MCP Apps 交互卡片、全页面看板和可点击侧栏查看并管理 Beads 问题。[English](README.md)
+[![CI](https://github.com/korosystems/beads-tasks-antigravity/actions/workflows/ci.yml/badge.svg)](https://github.com/korosystems/beads-tasks-antigravity/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/korosystems/beads-tasks-antigravity)](https://github.com/korosystems/beads-tasks-antigravity/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+[GitHub 仓库](https://github.com/korosystems/beads-tasks-antigravity) · [在线演示](https://korosystems.github.io/beads-tasks-antigravity/) · [问题反馈与支持](https://github.com/korosystems/beads-tasks-antigravity/issues) · [English](README.md)
+
+通过 Antigravity 的 MCP Apps 交互卡片、全页面看板和可点击侧栏查看并管理 Beads 问题。
 
 ## 前置要求
 
@@ -56,7 +62,7 @@ agy plugin install https://github.com/korosystems/beads-tasks-antigravity
 ```sh
 npm ci --prefix mcp
 node scripts/build-mcp.mjs
-node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs
+node --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs site/tests/*.test.mjs
 agy plugin validate --strict .
 ```
 
