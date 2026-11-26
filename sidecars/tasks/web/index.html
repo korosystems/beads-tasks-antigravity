@@ -8,6 +8,19 @@
   <link rel="stylesheet" href="/styles.css?v=8" />
 </head>
 <body>
+  <script>
+    try {
+      const key = (window.__tasksUiConfig?.storageKey || 'beads-tasks-review-queue') + ':theme';
+      let raw;
+      try { raw = sessionStorage.getItem(key); } catch {}
+      if (raw == null) { try { raw = localStorage.getItem(key); } catch {} }
+      const theme = JSON.parse(raw);
+      if (theme?.cssVariables && typeof theme.cssVariables === 'object') {
+        for (const [k, v] of Object.entries(theme.cssVariables)) document.documentElement.style.setProperty(k, v);
+      }
+      if (theme?.dataTheme) document.documentElement.dataset.theme = theme.dataTheme;
+    } catch { /* storage may be unavailable */ }
+  </script>
   <div class="shell">
     <header class="topbar">
       <div class="topbar-row">
@@ -85,6 +98,40 @@
     <main id="app-root" class="main">
       <div class="empty-state">Loading…</div>
     </main>
+    <script>
+      try {
+        const params = new URLSearchParams(window.__rscInitialSearch ?? location.search);
+        const copy = (params.get('clip') || params.get('copy') || params.get('©') || '').trim();
+        if (/^[a-z0-9][a-z0-9._-]{1,63}$/i.test(copy) && copy.toLowerCase() !== 'true' && !(params.get('id') || '').trim() && !(params.get('ids') || '').trim()) {
+          const root = document.getElementById('app-root');
+          root.innerHTML = '';
+          const conversationId = (window.sidecar && window.sidecar.conversationId) || params.get('conversationId') || '';
+          const prefix = (window.__tasksUiConfig?.storageKey || 'beads-tasks-review-queue') + ':';
+          const read = (suffix) => {
+            const key = prefix + suffix + ':' + (conversationId || '_default');
+            let value;
+            try { value = sessionStorage.getItem(key); } catch {}
+            if (value == null) { try { value = localStorage.getItem(key); } catch {} }
+            return JSON.parse(value);
+          };
+          const paint = read('view-paint');
+          if (paint && String(paint.conversationId || '') === String(conversationId || '')) {
+            const title = document.getElementById('view-title');
+            const badge = document.getElementById('project-badge');
+            const nav = document.getElementById('batch-nav');
+            title.textContent = paint.title;
+            badge.textContent = paint.projectBadgeText;
+            badge.classList.toggle('hidden', paint.projectBadgeHidden);
+            badge.style.setProperty('--project-color', paint.projectBadgeColor);
+            nav.innerHTML = paint.batchNavHtml;
+            nav.classList.toggle('hidden', paint.batchNavHidden);
+            root.innerHTML = paint.appRootHtml;
+            document.getElementById('btn-settings').setAttribute('aria-pressed', paint.settingsPressed);
+            try { root.scrollTop = read('scroll')?.rootScrollTop || 0; } catch {}
+          }
+        }
+      } catch { /* storage may be unavailable */ }
+    </script>
   </div>
 
   <script src="/notes_format.js?v=8"></script>

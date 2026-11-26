@@ -9,11 +9,11 @@ Follow any `[Beads Tasks Settings]` system message. If links are disabled, omit 
 
 Use `show_task_card` for an interactive issue, `show_task_batch` for a batch of two or more distinct IDs, and `open_tasks_board` for the full-page board when MCP Apps are available.
 
-The side panel URL is `sidecar://beads-tasks/tasks/`. Query parameters are `id` (one issue), `ids` (comma-separated review queue, up to 50), `clip=1` (copy the ID when opening it), `title` (batch title), `repo` (repository path), and `project` (configured project ID). URL-encode parameter values as needed. Use `repo` or `project` to select another project.
+The side panel URL is `sidecar://beads-tasks/tasks/`. Query parameters are `id` (one issue), `ids` (comma-separated review queue, up to 50), `clip=<id>` (copy without changing the current side panel view when `id` and `ids` are absent; legacy `id=<id>&clip=1` and `copy=1` copy and open detail), `title` (batch title), `repo` (repository path), and `project` (configured project ID). URL-encode parameter values as needed. Use `repo` or `project` to select another project.
 
 For the first mention of each distinct ID:
 
-- 1–5 IDs: `<id>` [⧉](sidecar://beads-tasks/tasks/?id=<id>&clip=1) [↗](sidecar://beads-tasks/tasks/?id=<id>)
+- 1–5 IDs: `<id>` [⧉](sidecar://beads-tasks/tasks/?clip=<id>) [↗](sidecar://beads-tasks/tasks/?id=<id>)
 - 6–10 IDs: `<id>` [↗](sidecar://beads-tasks/tasks/?id=<id>)
 - More than 10: use plain inline-code IDs.
 

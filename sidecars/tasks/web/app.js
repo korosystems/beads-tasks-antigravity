@@ -454,8 +454,97 @@
     return q.toString();
   }
 
+  if (!bridge) window.addEventListener('message', (event) => {
+    const cssVariables = event.data?.payload?.cssVariables;
+    if (event.data?.type !== 'theme-change' || !cssVariables || typeof cssVariables !== 'object' ||
+        ![Object.prototype, null].includes(Object.getPrototypeOf(cssVariables))) return;
+    try { writeViewStorage(`${storageKey}:theme`, JSON.stringify({ cssVariables, dataTheme: document.documentElement.dataset.theme || '' })); } catch { /* storage may be unavailable */ }
+  });
+
+  function viewStorageKey(suffix = 'view') {
+    return `${storageKey}:${suffix}:${state.conversationId || '_default'}`;
+  }
+
+  function readViewStorage(key) {
+    try { const value = sessionStorage.getItem(key); if (value != null) return value; } catch { /* unavailable */ }
+    try { if (typeof localStorage !== 'undefined') return localStorage.getItem(key); } catch { /* unavailable */ }
+    return null;
+  }
+
+  function writeViewStorage(key, value) {
+    try { sessionStorage.setItem(key, value); } catch { /* unavailable */ }
+    try { if (typeof localStorage !== 'undefined') localStorage.setItem(key, value); } catch { /* unavailable */ }
+  }
+
+  function saveViewPaint() {
+    if (bridge) return;
+    try {
+      const badge = $('project-badge');
+      const nav = $('batch-nav');
+      const serialized = JSON.stringify({
+        conversationId: state.conversationId,
+        title: $('view-title')?.textContent || '',
+        projectBadgeText: badge?.textContent || '',
+        projectBadgeHidden: badge?.classList.contains('hidden') ?? true,
+        projectBadgeColor: badge?.style?.getPropertyValue('--project-color') || '',
+        batchNavHtml: nav?.innerHTML || '',
+        batchNavHidden: nav?.classList.contains('hidden') ?? true,
+        appRootHtml: $('app-root')?.innerHTML || '',
+        settingsPressed: $('btn-settings')?.getAttribute('aria-pressed') || 'false',
+      });
+      writeViewStorage(viewStorageKey('view-paint'), new Blob([serialized]).size <= 256 * 1024 ? serialized : 'null');
+    } catch { /* storage may be unavailable */ }
+  }
+
+  function saveViewScroll() {
+    if (bridge || !state.id || state.settingsOpen) return;
+    try { writeViewStorage(viewStorageKey('scroll'), JSON.stringify({ id: state.id, scrollY: window.scrollY || 0, rootScrollTop: $('app-root')?.scrollTop || 0 })); } catch { /* storage may be unavailable */ }
+  }
+
+  function readViewScroll() {
+    try {
+      const saved = JSON.parse(readViewStorage(viewStorageKey('scroll')));
+      return saved?.id === state.id ? saved : null;
+    } catch { return null; }
+  }
+
+  function saveView() {
+    if (bridge) return;
+    const { id, ids, title, project, repo, settingsOpen, activeProjectId, projects, listStatusFilter, listQuery, batchStatusFilter, conversationId } = state;
+    try { writeViewStorage(viewStorageKey(), JSON.stringify({ id, ids, title, project, repo, settingsOpen, activeProjectId, projects, listStatusFilter, listQuery, batchStatusFilter, conversationId })); } catch { /* storage may be unavailable */ }
+  }
+
+  function saveViewData(snapshot) {
+    if (bridge) return;
+    try {
+      const serialized = JSON.stringify(snapshot);
+      if (new Blob([serialized]).size <= 512 * 1024) writeViewStorage(viewStorageKey('view-data'), serialized);
+      else writeViewStorage(viewStorageKey('view-data'), 'null');
+    } catch { /* storage may be unavailable */ }
+  }
+
+  function restoreView() {
+    let saved;
+    try { saved = JSON.parse(readViewStorage(viewStorageKey())); } catch { return; }
+    if (!saved || String(saved.conversationId || '') !== String(state.conversationId || '')) return;
+    state.id = typeof saved.id === 'string' ? saved.id : '';
+    state.ids = Array.isArray(saved.ids) ? saved.ids.filter(id => typeof id === 'string') : [];
+    state.title = typeof saved.title === 'string' ? saved.title : '';
+    state.project = typeof saved.project === 'string' ? saved.project : '';
+    state.repo = typeof saved.repo === 'string' ? saved.repo : '';
+    state.settingsOpen = Boolean(saved.settingsOpen);
+    state.activeProjectId = typeof saved.activeProjectId === 'string' ? saved.activeProjectId : '';
+    state.projects = Array.isArray(saved.projects) ? saved.projects : [];
+    state.listStatusFilter = typeof saved.listStatusFilter === 'string' ? saved.listStatusFilter : '';
+    state.listQuery = typeof saved.listQuery === 'string' ? saved.listQuery : '';
+    state.batchStatusFilter = typeof saved.batchStatusFilter === 'string' ? saved.batchStatusFilter : '';
+    initialQueuePending = !state.ids.length && Boolean(state.id);
+    if (state.ids.length) queue = { ids: [...state.ids], batchIds: [...state.ids], metaById: {}, source: 'batch', title: state.title, project: state.project, repo: state.repo, visitedIds: [] };
+  }
+
   function syncUrl() {
     if (bridge) return;
+    saveView();
     const q = new URLSearchParams();
     if (state.id) q.set('id', state.id);
     if (state.ids.length && !(state.id && queue.ids.includes(state.id))) q.set('ids', state.ids.join(','));
@@ -526,6 +615,10 @@
       return raw;
     }
     return '';
+  }
+
+  function isCopyOnlyNavigation(params) {
+    return Boolean(resolveCopyTarget(params)) && !(params.get('id') || '').trim() && !(params.get('ids') || '').trim();
   }
 
   async function writeClipboardViaNative(text) {
@@ -998,11 +1091,26 @@
       renderHeader(state.title || `${t('本轮任务列表')} (${data.counts?.found || 0}/${data.counts?.total || state.ids.length})`, data.primaryProject);
 
       data.items.forEach((item) => cacheItem(item));
-      if (state.mcpInline) {
-        renderInlineBatch(data);
-        return;
-      }
-      const renderFiltered = () => {
+      renderBatchViewData(data);
+      saveView();
+      saveViewData({ kind: 'batch', ids: [...state.ids], title: state.title, project: state.project, repo: state.repo, data });
+    } catch (err) {
+      if (seq !== viewRequestSeq) return;
+      applyProjectsMeta(err?.data);
+      clearFindStateForLoading();
+      root.innerHTML = `<div class="empty-state is-error">${t('批量加载失败')}: ${esc(err.message)}</div>`;
+    } finally {
+      if (seq === viewRequestSeq) setRefreshing(false);
+    }
+  }
+
+  function renderBatchViewData(data) {
+    const root = $('app-root');
+    if (state.mcpInline) {
+      renderInlineBatch(data);
+      return;
+    }
+    const renderFiltered = () => {
         const items = data.items.filter((it) => {
           if (!state.batchStatusFilter) return true;
           const st = it.bead?.status || it.taskDetail?.task?.status || '';
@@ -1042,6 +1150,7 @@
         for (const btn of root.querySelectorAll('[data-batch-st]')) {
           btn.onclick = () => {
             state.batchStatusFilter = btn.getAttribute('data-batch-st') || '';
+            saveView();
             renderFiltered();
           };
         }
@@ -1049,17 +1158,10 @@
         if ($('btn-review-list')) $('btn-review-list').onclick = () => openFromList('');
         syncInPageFind({ scroll: false });
         restoreListPosition();
+        saveViewPaint();
       };
 
-      renderFiltered();
-    } catch (err) {
-      if (seq !== viewRequestSeq) return;
-      applyProjectsMeta(err?.data);
-      clearFindStateForLoading();
-      root.innerHTML = `<div class="empty-state is-error">${t('批量加载失败')}: ${esc(err.message)}</div>`;
-    } finally {
-      if (seq === viewRequestSeq) setRefreshing(false);
-    }
+    renderFiltered();
   }
 
   function renderListCard(it) {
@@ -1122,6 +1224,10 @@
       } finally { if (seq === viewRequestSeq) setRefreshing(false); }
       return;
     }
+    await renderListViewFromSnapshot(null, force);
+  }
+
+  function renderListViewFromSnapshot(snapshot, force = false) {
     if (findState.open && !normalizeFindQuery(findState.query)) closeFindBar({ restoreFocus: false });
     ++viewRequestSeq;
     renderHeader(t('项目任务总览'), null);
@@ -1159,7 +1265,7 @@
           </div>
         </div>
       </div>
-      <div id="list-container"><div class="empty-state">${t('加载中…')}</div></div>
+      <div id="list-container"></div>
     `;
 
     const fetchAndRender = async (forceRefresh = false) => {
@@ -1172,22 +1278,9 @@
       try {
         const data = await requestJson(`/api/list?${requestQuery}`);
         if (seq !== viewRequestSeq) return;
-        applyProjectsMeta(data);
-        renderHeader(t('项目任务总览'), data.project);
-        visibleItems = data.items || [];
-        visibleSource = 'list';
-        visibleItems.forEach(rememberItem);
-        $('btn-review-list').classList.toggle('hidden', !visibleItems.length);
-        $('btn-review-list').onclick = () => openFromList('');
-        if (!data.items?.length) {
-          clearFindStateForLoading();
-          container.innerHTML = `<div class="empty-state">${esc(window.__tasksUiConfig?.emptyTasksText || t('暂无匹配的 Beads 任务'))}</div>`;
-          return;
-        }
-        container.innerHTML = `<div class="card-list">${data.items.map(renderListCard).join('')}</div>`;
-        bindCardListInteractions(container);
-        syncInPageFind({ scroll: false });
-        restoreListPosition();
+        renderListData(data);
+        saveView();
+        saveViewData({ kind: 'list', project: state.project, repo: state.repo, listStatusFilter: state.listStatusFilter, listQuery: state.listQuery, data });
       } catch (err) {
         if (seq !== viewRequestSeq) return;
         applyProjectsMeta(err?.data);
@@ -1232,7 +1325,30 @@
       };
     }
 
-    await fetchAndRender(force);
+    if (snapshot) renderListData(snapshot);
+    else return fetchAndRender(force);
+  }
+
+  function renderListData(data) {
+    const container = $('list-container');
+    applyProjectsMeta(data);
+    renderHeader(t('项目任务总览'), data.project);
+    visibleItems = data.items || [];
+    visibleSource = 'list';
+    visibleItems.forEach(rememberItem);
+    $('btn-review-list').classList.toggle('hidden', !visibleItems.length);
+    $('btn-review-list').onclick = () => openFromList('');
+    if (!visibleItems.length) {
+      clearFindStateForLoading();
+      container.innerHTML = `<div class="empty-state">${esc(window.__tasksUiConfig?.emptyTasksText || t('暂无匹配的 Beads 任务'))}</div>`;
+      saveViewPaint();
+      return;
+    }
+    container.innerHTML = `<div class="card-list">${visibleItems.map(renderListCard).join('')}</div>`;
+    bindCardListInteractions(container);
+    syncInPageFind({ scroll: false });
+    restoreListPosition();
+    saveViewPaint();
   }
 
   function extractLatestReply(td, steps) {
@@ -1780,6 +1896,7 @@
 
     ext.bindDetailExtras?.(root, data, { postJson, showToast, applyActionItem });
     syncInPageFind({ scroll: false });
+    saveViewPaint();
   }
 
   const FIND_SKIP_SELECTOR =
@@ -2090,6 +2207,8 @@
         renderDetailItem(data);
         if (cached) { root.scrollTop = rootY; window.scrollTo(0, y); }
       }
+      saveView();
+      saveViewData({ kind: 'detail', id, project: state.project, repo: state.repo, data, scrollY: window.scrollY || 0, rootScrollTop: root.scrollTop || 0 });
     } catch (err) {
       if (viewSeq !== viewRequestSeq || seq !== detailRequestSeq || state.id !== id || cacheKey(id) !== key) return;
       applyProjectsMeta(err?.data);
@@ -2113,6 +2232,17 @@
     try {
       const data = await requestJson('/api/settings');
       if (seq !== viewRequestSeq || !state.settingsOpen) return;
+      renderSettingsContent(data);
+      saveViewData({ kind: 'settings', data });
+    } catch (err) {
+      if (seq === viewRequestSeq && state.settingsOpen) root.innerHTML = `<div class="empty-state is-error">${t('读取设置失败')}: ${esc(err.message)}</div>`;
+    }
+  }
+
+  function renderSettingsContent(data) {
+      $('batch-nav').classList.add('hidden');
+      renderHeader(`${window.__tasksUiConfig?.title || 'Beads Tasks'} ${t('设置')}`, null);
+      const root = $('app-root');
       state.settings = data.settings;
       state.settingsPath = data.path;
       applyLocale();
@@ -2141,19 +2271,55 @@
           const result = await postJson('/api/settings', { emitSidecarLinks: next });
           state.settings = result.settings;
           state.settingsPath = result.path;
+          saveViewData({ kind: 'settings', data: result });
           showToast(next ? t('已开启输出 Sidecar 链接（下一轮对话生效）') : t('已关闭输出 Sidecar 链接（下一轮对话生效）'));
         } catch (err) {
           toggle.classList.toggle('is-on', previous);
           toggle.setAttribute('aria-checked', String(previous));
           showToast(t('设置保存失败: {error}', { error: err.message }), 'err');
-        } finally { toggle.disabled = false; }
+        } finally { toggle.disabled = false; saveViewPaint(); }
       };
-    } catch (err) {
-      if (seq === viewRequestSeq && state.settingsOpen) root.innerHTML = `<div class="empty-state is-error">${t('读取设置失败')}: ${esc(err.message)}</div>`;
-    }
+      saveViewPaint();
+  }
+
+  function restoreRenderedSnapshot() {
+    try {
+      const snapshot = JSON.parse(readViewStorage(viewStorageKey('view-data')));
+      if (!snapshot || !snapshot.data) return false;
+      const kind = state.settingsOpen ? 'settings' : state.id ? 'detail' : state.ids.length ? 'batch' : 'list';
+      if (snapshot.kind !== kind) return false;
+      if (kind !== 'settings' && (snapshot.project !== state.project || snapshot.repo !== state.repo)) return false;
+      if (kind === 'detail' && snapshot.id !== state.id) return false;
+      if (kind === 'batch' && (JSON.stringify(snapshot.ids) !== JSON.stringify(state.ids) || snapshot.title !== state.title)) return false;
+      if (kind === 'list' && (snapshot.listStatusFilter !== state.listStatusFilter || snapshot.listQuery !== state.listQuery)) return false;
+      $('btn-settings').setAttribute('aria-pressed', String(state.settingsOpen));
+      if (kind === 'detail') {
+        const data = snapshot.data;
+        detailCache.set(cacheKey(state.id), { data, fetchedAt: Date.now() });
+        applyProjectsMeta(data);
+        rememberItem(data);
+        if (initialQueuePending) { initialQueuePending = false; restoreQueue(initialParams); }
+        lastDetailId = state.id;
+        renderDetailItem(data);
+        const position = readViewScroll() || snapshot;
+        $('app-root').scrollTop = position.rootScrollTop || 0;
+        window.scrollTo(0, position.scrollY || 0);
+      } else if (kind === 'batch') {
+        applyProjectsMeta(snapshot.data);
+        renderHeader(state.title || `${t('本轮任务列表')} (${snapshot.data.counts?.found || 0}/${snapshot.data.counts?.total || state.ids.length})`, snapshot.data.primaryProject);
+        snapshot.data.items.forEach(cacheItem);
+        renderBatchViewData(snapshot.data);
+      } else if (kind === 'list') {
+        renderListViewFromSnapshot(snapshot.data);
+      } else {
+        renderSettingsContent(snapshot.data);
+      }
+      return true;
+    } catch { return false; }
   }
 
   async function renderCurrentView(options = {}) {
+    saveView();
     $('btn-settings').setAttribute('aria-pressed', String(state.settingsOpen));
     if (state.settingsOpen) {
       await renderSettingsView();
@@ -2233,8 +2399,18 @@
 
   async function init() {
     applyLocale();
+    let restoredFromSnapshot = false;
+    if (!bridge && isCopyOnlyNavigation(initialParams)) {
+      const copyTarget = resolveCopyTarget(initialParams);
+      restoreView();
+      syncUrl();
+      renderProjectSelector();
+      void copyText(copyTarget, null, t('已复制 ID'), { preferNative: true });
+      restoredFromSnapshot = restoreRenderedSnapshot();
+    } else {
+      handlePendingCopy(initialParams);
+    }
     try { const data = await requestJson('/api/settings'); state.settings = data.settings; state.settingsPath = data.path; applyLocale(); } catch { /* use defaults if settings are unavailable */ }
-    handlePendingCopy(initialParams);
     $('project-select').onchange = (e) => {
       state.settingsOpen = false;
       state.project = e.target.value;
@@ -2352,10 +2528,24 @@
       await initMcpBridge();
       return;
     }
+    let scrollFramePending = false;
+    const saveDetailPosition = () => {
+      if (scrollFramePending || !state.id || state.settingsOpen) return;
+      if (typeof window.requestAnimationFrame !== 'function') { saveViewScroll(); return; }
+      scrollFramePending = true;
+      window.requestAnimationFrame(() => { scrollFramePending = false; saveViewScroll(); });
+    };
+    window.addEventListener('scroll', saveDetailPosition, { passive: true });
+    $('app-root').addEventListener('scroll', saveDetailPosition, { passive: true });
     window.addEventListener('popstate', async () => {
+      const p = new URLSearchParams(location.search);
+      if (isCopyOnlyNavigation(p)) {
+        void copyText(resolveCopyTarget(p), null, t('已复制 ID'), { preferNative: true });
+        syncUrl();
+        return;
+      }
       initialQueuePending = false;
       const seq = ++viewRequestSeq;
-      const p = new URLSearchParams(location.search);
       const project = (p.get('project') || '').trim();
       const repo = (p.get('repo') || '').trim();
       const conversationId = window.sidecar?.conversationId || p.get('conversationId') || '';
@@ -2382,6 +2572,8 @@
       handlePendingCopy(p);
       renderCurrentView();
     });
+
+    if (restoredFromSnapshot) return;
 
     await renderCurrentView();
   }

@@ -7,6 +7,52 @@ import { queueNeighbors, shouldHandleQueueShortcut, shouldRestoreSavedQueue } fr
 
 const queue = { ids: ['a', 'b', 'c'], visitedIds: ['a', 'c', 'other'] };
 
+test('inline first paint restores theme and isolates conversation snapshots', () => {
+  const html = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8');
+  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
+  assert.equal(scripts.length, 2);
+  const values = new Map([
+    ['q:theme', JSON.stringify({ cssVariables: { '--bg': '#123' }, dataTheme: 'dark' })],
+    ['q:view-paint:A', JSON.stringify({ conversationId: 'A', title: 'saved', projectBadgeText: 'p', projectBadgeHidden: false, projectBadgeColor: 'red', batchNavHtml: 'nav', batchNavHidden: false, appRootHtml: '<p>saved</p>', settingsPressed: 'true' })],
+    ['q:scroll:A', JSON.stringify({ id: 'a', rootScrollTop: 42 })],
+    ['q:view-paint:B', JSON.stringify({ conversationId: 'A', appRootHtml: 'wrong' })],
+  ]);
+  const storage = { getItem: key => values.get(key) ?? null };
+  const run = search => {
+    const nodes = new Map();
+    const node = id => {
+      if (!nodes.has(id)) nodes.set(id, { innerHTML: id === 'app-root' ? '加载中…' : '', textContent: '', scrollTop: 0, style: { setProperty() {} }, classList: { toggle() {} }, setAttribute() {} });
+      return nodes.get(id);
+    };
+    const css = {};
+    const document = { getElementById: node, documentElement: { dataset: {}, style: { setProperty: (k, v) => { css[k] = v; } } } };
+    const context = { window: { __tasksUiConfig: { storageKey: 'q' } }, location: { search }, document, sessionStorage: storage, localStorage: storage, URLSearchParams };
+    scripts.forEach(script => runInNewContext(script, context));
+    assert.equal(css['--bg'], '#123'); assert.equal(document.documentElement.dataset.theme, 'dark');
+    return node;
+  };
+  let node = run('?clip=abc&conversationId=A');
+  assert.equal(node('app-root').innerHTML, '<p>saved</p>'); assert.equal(node('app-root').scrollTop, 42); assert.equal(node('view-title').textContent, 'saved');
+  node = run('?clip=abc&conversationId=B'); assert.equal(node('app-root').innerHTML, '');
+  node = run('?id=abc&clip=abc&conversationId=A'); assert.equal(node('app-root').innerHTML, '加载中…');
+  for (const clip of ['0', 'a%20b', 'true']) assert.equal(run(`?clip=${clip}&conversationId=A`)('app-root').innerHTML, '加载中…');
+});
+
+test('detail scrolling writes only the small scroll key and coalesces frames', () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const helpers = app.slice(app.indexOf('  function viewStorageKey('), app.indexOf('  function saveView()'));
+  const listener = app.slice(app.indexOf('    let scrollFramePending'), app.indexOf("    window.addEventListener('popstate'"));
+  const values = new Map([['q:view-data:A', 'large snapshot']]); const writes = []; const handlers = {}; const frames = [];
+  const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => { writes.push(key); values.set(key, value); } };
+  const root = { scrollTop: 27, addEventListener: (name, fn) => { handlers.root = fn; } };
+  const context = { bridge: null, storageKey: 'q', state: { id: 'a', conversationId: 'A', settingsOpen: false }, sessionStorage: storage, localStorage: storage, Blob,
+    $: () => root, window: { scrollY: 12, addEventListener: (name, fn) => { handlers[name] = fn; }, requestAnimationFrame: fn => frames.push(fn) } };
+  runInNewContext(`${helpers}\n${listener}\nthis.readViewScroll = readViewScroll;`, context);
+  handlers.scroll(); handlers.root(); assert.equal(frames.length, 1); assert.equal(writes.length, 0); frames[0]();
+  assert.deepEqual(writes, ['q:scroll:A', 'q:scroll:A']); assert.equal(values.get('q:view-data:A'), 'large snapshot');
+  assert.equal(context.readViewScroll().rootScrollTop, 27); context.state.id = 'b'; assert.equal(context.readViewScroll(), null);
+});
+
 test('host preload path and queue status styles are present', () => {
   const html = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../web/styles.css', import.meta.url), 'utf8');
@@ -171,7 +217,7 @@ test('batch find opens immediately, preserves typing and stays closed when filte
     viewRequestSeq: 0, visibleItems: [], visibleSource: '',
     buildScopeQuery: () => '', renderHeader() {}, clearFindStateForLoading() {}, setRefreshing() {}, applyProjectsMeta: (data) => { context.meta = data; },
     requestJson: () => new Promise((resolve) => { resolveBatch = resolve; }),
-    cacheItem() {}, bindCardListInteractions() {}, restoreListPosition() {}, renderBatchCard: () => '', esc: String,
+    cacheItem() {}, saveView() {}, saveViewData() {}, saveViewPaint() {}, bindCardListInteractions() {}, restoreListPosition() {}, renderBatchCard: () => '', esc: String,
     syncInPageFind: () => { syncs += 1; }, runInPageFind() {}, clearFindHighlights() {}, updateFindToolbarControls() {},
     normalizeFindQuery: (value) => String(value || '').trim(),
   };
@@ -248,11 +294,11 @@ test('history navigation resolves the new scope before restoring a queue and ign
     parseIds: (ids) => ids ? ids.split(',') : [],
     buildScopeQuery: () => new URLSearchParams({ conversationId: context.state.conversationId, ...(context.state.project && { project: context.state.project }) }).toString(),
     requestJson: (url) => new Promise((resolve, reject) => pending.push({ url, resolve, reject })),
-    renderProjectSelector() {}, handlePendingCopy() {}, renderCurrentView: () => renders.push(context.state.activeProjectId),
+    renderProjectSelector() {}, handlePendingCopy() {}, isCopyOnlyNavigation: () => false, renderCurrentView: () => renders.push(context.state.activeProjectId),
   };
   runInNewContext(`${section('  function restoreQueue(', '  function discardConflictingRestoredQueue(')}
     ${section('  async function refreshProjectsScope(', '  async function init(')}
-    ${section("    window.addEventListener('popstate'", '\n\n    await renderCurrentView();')}`, context);
+    ${section("    window.addEventListener('popstate'", '    if (restoredFromSnapshot) return;')}`, context);
   const first = context.navigate();
   assert.equal(context.state.activeProjectId, '');
   assert.match(pending[0].url, /conversationId=c/);
@@ -366,5 +412,142 @@ test('detail queue footer previews ids only and keeps the compound button rule',
     assert.match(rule[1], /flex-direction:\s*column/);
     assert.ok(!text.includes('.queue-preview-title'), `${label} must not keep .queue-preview-title rules or markup`);
     assert.match(text, /\.queue-preview-id\s*\{[^}]*flex-shrink:\s*0/);
+  }
+});
+
+test('copy-only navigation preserves the current view and legacy links still navigate', async () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const section = (start, end) => app.slice(app.indexOf(start), app.indexOf(end));
+  const calls = [];
+  const context = {
+    URLSearchParams, location: { search: '' }, window: { addEventListener: (_, fn) => { context.navigate = fn; } },
+    state: { id: 'old', ids: ['old', 'next'], title: 'batch', project: 'p', repo: '', conversationId: 'c', settingsOpen: true },
+    queue: { ids: ['old', 'next'] }, visitedIds: new Set(), viewRequestSeq: 7, scopeRefreshPending: true, initialQueuePending: true,
+    t: String, copyText: (...args) => calls.push(['copy', args[0]]), syncUrl: () => calls.push(['sync']),
+    parseIds: raw => raw ? raw.split(',') : [], refreshProjectsScope: async () => calls.push(['request']),
+    restoreQueue() {}, renderProjectSelector() {}, handlePendingCopy: p => { const target = context.resolveCopyTarget(p); if (target) calls.push(['copy', target]); },
+    renderCurrentView: () => calls.push(['render']),
+  };
+  runInNewContext(`${section('  function resolveCopyTarget(', '  async function writeClipboardViaNative(')}
+    this.resolveCopyTarget = resolveCopyTarget; this.isCopyOnlyNavigation = isCopyOnlyNavigation;
+    ${section("    window.addEventListener('popstate'", '    if (restoredFromSnapshot) return;')}`, context);
+  for (const query of ['?clip=abc', '?clip=abc&token=t&conversationId=c', '?clip=abc&project=other']) assert.equal(context.isCopyOnlyNavigation(new URLSearchParams(query)), true);
+  for (const query of ['?id=abc&clip=1', '?ids=a,b&clip=a', '?id=abc', '?clip=1', '']) assert.equal(context.isCopyOnlyNavigation(new URLSearchParams(query)), false);
+  for (const view of [{ id: 'old', ids: [], settingsOpen: false }, { id: '', ids: ['old', 'next'], settingsOpen: false }, { id: 'old', ids: [], settingsOpen: true }]) {
+    Object.assign(context.state, view);
+    const before = JSON.stringify([context.state, context.queue, context.viewRequestSeq, context.scopeRefreshPending, context.initialQueuePending]);
+    context.location.search = '?clip=xyz&project=other';
+    await context.navigate();
+    assert.equal(JSON.stringify([context.state, context.queue, context.viewRequestSeq, context.scopeRefreshPending, context.initialQueuePending]), before);
+    assert.deepEqual(calls.splice(0), [['copy', 'xyz'], ['sync']]);
+  }
+  context.scopeRefreshPending = false;
+  context.location.search = '?id=abc&clip=1';
+  await context.navigate();
+  assert.equal(context.state.id, 'abc');
+  assert.deepEqual(calls, [['request'], ['copy', 'abc'], ['render']]);
+});
+
+test('copy-only initial navigation restores only the same conversation snapshot', () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const section = (start, end) => app.slice(app.indexOf(start), app.indexOf(end));
+  for (const saved of [
+    { id: 'old', ids: [], settingsOpen: false, conversationId: 'c' },
+    { id: '', ids: ['old', 'next'], settingsOpen: false, conversationId: 'c' },
+    { id: '', ids: [], settingsOpen: true, conversationId: 'c' },
+    { id: 'secret', ids: [], settingsOpen: false, conversationId: 'other' }, null,
+  ]) {
+    const calls = [];
+    const context = { URLSearchParams, bridge: null, initialParams: new URLSearchParams('?clip=xyz&project=other'),
+      state: { id: '', ids: [], title: '', project: '', repo: '', settingsOpen: false, conversationId: 'c' },
+      queue: { ids: [] }, initialQueuePending: false, storageKey: 'queue',
+      sessionStorage: { getItem: () => JSON.stringify(saved) },
+      t: String, syncUrl: () => calls.push('sync'), copyText: id => calls.push(id), handlePendingCopy: () => calls.push('legacy'),
+      readViewStorage: () => JSON.stringify(saved), viewStorageKey: () => 'key', renderProjectSelector() {}, restoreRenderedSnapshot: () => false, restoredFromSnapshot: false,
+    };
+    runInNewContext(`${section('  function restoreView(', '  function syncUrl(')}
+      ${section('  function resolveCopyTarget(', '  async function writeClipboardViaNative(')}
+      (function () { ${section('    if (!bridge && isCopyOnlyNavigation(initialParams)) {', "    try { const data = await requestJson('/api/settings')")} })();`, context);
+    const matches = saved && saved.conversationId === 'c';
+    assert.equal(context.state.id, matches ? saved.id : '');
+    assert.equal(context.state.settingsOpen, matches ? saved.settingsOpen : false);
+    assert.deepEqual(Array.from(context.state.ids), matches ? saved.ids : []);
+    assert.equal(context.initialQueuePending, Boolean(matches && saved.id && !saved.ids.length));
+    if (matches && saved.ids.length) assert.deepEqual(Array.from(context.queue.ids), saved.ids);
+    assert.deepEqual(calls, ['sync', 'xyz']);
+  }
+});
+
+
+test('view snapshots are isolated by conversation and survive session storage loss', () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const local = new Map();
+  let session = new Map();
+  const storage = map => ({ getItem: key => map.get(key) ?? null, setItem: (key, value) => map.set(key, value) });
+  const state = { conversationId: 'A', id: 'a', ids: [], title: '', project: 'p', repo: '', settingsOpen: false, activeProjectId: 'p', projects: [{ id: 'p' }], listStatusFilter: 'open', listQuery: 'needle', batchStatusFilter: 'closed' };
+  const context = { state, storageKey: 'q', bridge: null, sessionStorage: storage(session), localStorage: storage(local), Blob, queue: {}, initialQueuePending: false };
+  runInNewContext(`${app.slice(app.indexOf('  function viewStorageKey('), app.indexOf('  function syncUrl('))} this.saveView = saveView; this.saveViewData = saveViewData; this.restoreView = restoreView; this.readData = () => JSON.parse(readViewStorage(viewStorageKey('view-data')));`, context);
+  context.saveView(); context.saveViewData({ kind: 'detail', data: { id: 'a' } });
+  Object.assign(state, { conversationId: 'B', id: 'b', listQuery: 'other' });
+  context.saveView(); context.saveViewData({ kind: 'detail', data: { id: 'b' } });
+  session = new Map(); context.sessionStorage = storage(session);
+  Object.assign(state, { conversationId: 'A', id: '', listQuery: '' });
+  context.restoreView();
+  assert.equal(state.id, 'a'); assert.equal(state.listQuery, 'needle'); assert.equal(state.activeProjectId, 'p');
+  assert.equal(context.readData().data.id, 'a');
+  state.conversationId = 'B'; context.restoreView();
+  assert.equal(state.id, 'b'); assert.equal(context.readData().data.id, 'b');
+});
+
+test('copy-only snapshots synchronously restore each view and reject mismatches', () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const source = app.slice(app.indexOf('  function restoreRenderedSnapshot('), app.indexOf('  async function renderCurrentView('));
+  for (const kind of ['detail', 'batch', 'list', 'settings']) {
+    const calls = [];
+    const state = { id: kind === 'detail' ? 'a' : '', ids: kind === 'batch' ? ['a'] : [], title: kind === 'batch' ? 'batch' : '', project: 'p', repo: '', listStatusFilter: '', listQuery: '', settingsOpen: kind === 'settings' };
+    const snapshot = { kind, id: 'a', ids: ['a'], title: 'batch', project: 'p', repo: '', listStatusFilter: '', listQuery: '', data: { items: [] }, scrollY: 12, rootScrollTop: 3 };
+    const root = { scrollTop: 0 };
+    const context = { state, initialQueuePending: true, initialParams: new URLSearchParams(), detailCache: new Map(), lastDetailId: '',
+      readViewStorage: () => JSON.stringify(snapshot), readViewScroll: () => null, viewStorageKey: () => '', cacheKey: id => id,
+      $: id => id === 'app-root' ? root : { setAttribute() {} }, window: { scrollTo: (_x, y) => calls.push(['scroll', y]) },
+      applyProjectsMeta() {}, rememberItem() {}, restoreQueue() {}, renderHeader() {}, cacheItem() {},
+      renderDetailItem: () => calls.push(['detail']), renderBatchViewData: () => calls.push(['batch']),
+      renderListViewFromSnapshot: () => calls.push(['list']), renderSettingsContent: () => calls.push(['settings']),
+    };
+    runInNewContext(`${source} this.restore = restoreRenderedSnapshot;`, context);
+    assert.equal(context.restore(), true, kind);
+    assert.equal(calls[0][0], kind);
+    if (kind === 'detail') { assert.equal(root.scrollTop, 3); assert.deepEqual(calls[1], ['scroll', 12]); }
+    snapshot.kind = 'wrong'; assert.equal(context.restore(), false);
+  }
+});
+
+
+test('copy-only init restores synchronously and fetches only on a snapshot miss', async () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const init = app.slice(app.indexOf('  async function init()'), app.indexOf('  init().catch('));
+  const restore = app.slice(app.indexOf('  function restoreRenderedSnapshot('), app.indexOf('  async function renderCurrentView('));
+  for (const kind of ['detail', 'batch', 'list', 'settings', 'missing']) {
+    const calls = [];
+    const nodes = new Map();
+    const node = id => {
+      if (!nodes.has(id)) nodes.set(id, { innerHTML: '', scrollTop: 0, value: '', setAttribute() {}, addEventListener() {}, classList: { toggle() {} } });
+      return nodes.get(id);
+    };
+    const state = { id: kind === 'detail' ? 'a' : '', ids: kind === 'batch' ? ['a'] : [], title: kind === 'batch' ? 'batch' : '', project: 'p', repo: '', listStatusFilter: '', listQuery: '', settingsOpen: kind === 'settings' };
+    const snapshot = kind === 'missing' ? null : { kind, id: 'a', ids: ['a'], title: 'batch', project: 'p', repo: '', listStatusFilter: '', listQuery: '', data: { items: [] } };
+    const context = { state, bridge: null, initialParams: new URLSearchParams('?clip=a'), $: node, initialQueuePending: false, detailCache: new Map(),
+      window: { addEventListener() {}, scrollTo() {} }, findState: {}, readViewStorage: () => JSON.stringify(snapshot), readViewScroll: () => null, viewStorageKey: () => '', cacheKey: id => id,
+      t: String, applyLocale() {}, requestJson: async () => ({ settings: {}, path: '' }), isCopyOnlyNavigation: () => true, resolveCopyTarget: () => 'a', restoreView() {}, syncUrl() {}, renderProjectSelector() {}, copyText() {},
+      applyProjectsMeta() {}, rememberItem() {}, restoreQueue() {}, renderHeader() {}, cacheItem() {},
+      renderDetailItem: () => calls.push('detail'), renderBatchViewData: () => calls.push('batch'), renderListViewFromSnapshot: () => calls.push('list'), renderSettingsContent: () => calls.push('settings'),
+      renderCurrentView: () => calls.push('fetch'),
+    };
+    runInNewContext(`${restore}\n${init}\nthis.start = init;`, context);
+    const started = context.start();
+    assert.deepEqual(calls, kind === 'missing' ? [] : [kind]);
+    assert.doesNotMatch(node('app-root').innerHTML, /加载中|正在读取|skeleton/);
+    await started;
+    assert.deepEqual(calls, [kind === 'missing' ? 'fetch' : kind]);
   }
 });
