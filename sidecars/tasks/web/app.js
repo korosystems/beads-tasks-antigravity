@@ -445,7 +445,7 @@
     const q = new URLSearchParams();
     if (state.conversationId) q.set('conversationId', state.conversationId);
     if (state.project) q.set('project', state.project);
-    else if (state.repo) q.set('repo', state.repo);
+    if (state.repo) q.set('repo', state.repo);
     for (const [k, v] of Object.entries(extra)) {
       if (v !== undefined && v !== null && String(v) !== '') {
         q.set(k, String(v));
@@ -682,7 +682,10 @@
       sel.innerHTML = `<option value="">${t('默认项目')}</option>`;
       return;
     }
-    const current = state.project || state.activeProjectId || state.projects[0]?.id || '';
+    const current = (state.project && state.projects.some((p) => p.id === state.project) ? state.project : '')
+      || state.activeProjectId
+      || state.projects[0]?.id
+      || '';
     sel.innerHTML = state.projects
       .map((p) => `<option value="${esc(p.id)}" ${p.id === current ? 'selected' : ''}>${esc(p.name)}</option>`)
       .join('');

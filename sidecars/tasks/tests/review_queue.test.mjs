@@ -551,3 +551,39 @@ test('copy-only init restores synchronously and fetches only on a snapshot miss'
     assert.deepEqual(calls, [kind === 'missing' ? 'fetch' : kind]);
   }
 });
+
+test('buildScopeQuery preserves repo alongside project and renderProjectSelector falls back to activeProjectId', () => {
+  const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+  const buildScope = app.slice(app.indexOf('  function buildScopeQuery('), app.indexOf("  if (!bridge) window.addEventListener('message'"));
+  const renderSelector = app.slice(app.indexOf('  function renderProjectSelector('), app.indexOf('  function applyProjectsMeta('));
+  const sel = { innerHTML: '' };
+  const context = {
+    state: {
+      conversationId: '',
+      project: 'limen',
+      repo: '/repo/limen',
+      activeProjectId: 'repo:/repo/limen',
+      projects: [
+        { id: 'repo:/repo/limen', name: 'limen' },
+        { id: 'other', name: 'Other' },
+      ],
+    },
+    URLSearchParams,
+    $: (id) => (id === 'project-select' ? sel : null),
+    t: String,
+    esc: String,
+  };
+  runInNewContext(`${buildScope}\n${renderSelector}\nthis.buildScopeQuery = buildScopeQuery;\nthis.renderProjectSelector = renderProjectSelector;`, context);
+
+  assert.equal(context.buildScopeQuery({ id: 'lmn-eq9' }), 'project=limen&repo=%2Frepo%2Flimen&id=lmn-eq9');
+  context.state.repo = '';
+  assert.equal(context.buildScopeQuery({ id: 'lmn-eq9' }), 'project=limen&id=lmn-eq9');
+
+  context.renderProjectSelector();
+  assert.match(sel.innerHTML, /<option value="repo:\/repo\/limen" selected>limen<\/option>/);
+
+  context.state.project = 'other';
+  context.renderProjectSelector();
+  assert.match(sel.innerHTML, /<option value="other" selected>Other<\/option>/);
+});
+
